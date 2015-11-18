@@ -1,0 +1,33 @@
+{
+  "name" : "activecollab/cookies",
+  "type": "library",
+  "description": "Easily get and set cookies",
+  "license" : "MIT",
+  "prefer-stable": true,
+  "keywords": [ "cookies", "activecollab" ],
+  "homepage": "https://labs.activecollab.com",
+  "authors": [
+    {
+      "name": "Ilija Studen",
+      "email": "ilija.studen@activecollab.com"
+    }
+  ],
+  "require" : {
+    "php": ">=5.6.0",
+    "dflydev/fig-cookies" : "~1.0"
+  },
+  "require-dev" : {
+    "phpunit/phpunit": "~4.8"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "ActiveCollab\\Cookies\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ActiveCollab\\Cookies\\Test\\": "test/src"
+    }
+  }
+}
