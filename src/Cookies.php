@@ -34,9 +34,9 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get($name, $default = null)
     {
-        return $this->adapter->get($this->getPrefixedName($name));
+        return $this->adapter->get($this->getPrefixedName($name), $default);
     }
 
     /**
@@ -51,7 +51,7 @@ class Cookies implements CookiesInterface
             $ttl = $this->default_ttl;
         }
 
-        $this->adapter->set($this->getPrefixedName($name), $value, $ttl, $http_only);
+        $this->adapter->set($this->getPrefixedName($name), $value, time() + $ttl, $http_only);
     }
 
     /**

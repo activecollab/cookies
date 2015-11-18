@@ -33,9 +33,9 @@ class Test implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get($name, $default = null)
     {
-        return isset($this->data[$name]) ? $this->data[$name] : null;
+        return isset($this->data[$name]) ? $this->data[$name] : $default;
     }
 
     /**

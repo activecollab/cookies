@@ -19,9 +19,10 @@ interface AdapterInterface
 
     /**
      * @param  string $name
+     * @param  mixed  $default
      * @return mixed
      */
-    public function get($name);
+    public function get($name, $default = null);
 
     /**
      * @param  string  $name

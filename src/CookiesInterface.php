@@ -19,9 +19,10 @@ interface CookiesInterface
      * Read a cookie with the given name
      *
      * @param  string $name
+     * @param  mixed  $default
      * @return mixed
      */
-    public function get($name);
+    public function get($name, $default = null);
 
     /**
      * @param string       $name
@@ -35,6 +36,19 @@ interface CookiesInterface
      * @param string $name
      */
     public function remove($name);
+
+    /**
+     * @return integer
+     */
+    public function getDefaultTtl();
+
+    /**
+     * Set default cookie TTL (time to live)
+     *
+     * @param  integer $value
+     * @return $this
+     */
+    public function &defaultTtl($value);
 
     /**
      * Return cookie domain
