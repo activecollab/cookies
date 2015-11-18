@@ -24,22 +24,19 @@ class Cookies implements CookiesInterface
     }
 
     /**
-     * Return true if cookie with the given name exists
-     *
-     * @param  string  $name
-     * @return boolean
+     * {@inheritdoc}
      */
     public function exists($name)
     {
-
+        return $this->adapter->exists($this->getPrefixedName($name));
     }
 
     /**
-     * @param string $name
+     * {@inheritdoc}
      */
     public function get($name)
     {
-
+        return $this->adapter->get($this->getPrefixedName($name));
     }
 
     /**
@@ -50,7 +47,11 @@ class Cookies implements CookiesInterface
      */
     public function set($name, $value, $ttl = null, $http_only = true)
     {
+        if (empty($ttl)) {
+            $ttl = $this->default_ttl;
+        }
 
+        $this->adapter->set($this->getPrefixedName($name), $value, $ttl, $http_only);
     }
 
     /**
@@ -58,12 +59,51 @@ class Cookies implements CookiesInterface
      */
     public function remove($name)
     {
+        $this->adapter->remove($this->getPrefixedName($name));
+    }
 
+    /**
+     * Return key name based on cookie name
+     *
+     * @param  string $name
+     * @return string
+     */
+    private function getPrefixedName($name)
+    {
+        return $this->getPrefix() . $name;
     }
 
     // ---------------------------------------------------
     //  Configuration
     // ---------------------------------------------------
+
+    /**
+     * Default TTL (14 days)
+     *
+     * @var integer
+     */
+    private $default_ttl = 1209600;
+
+    /**
+     * @return integer
+     */
+    public function getDefaultTtl()
+    {
+        return $this->default_ttl;
+    }
+
+    /**
+     * Set default cookie TTL (time to live)
+     *
+     * @param  integer $value
+     * @return $this
+     */
+    public function &defaultTtl($value)
+    {
+        $this->default_ttl = $value;
+
+        return $this;
+    }
 
     /**
      * @var string

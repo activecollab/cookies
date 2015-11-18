@@ -16,7 +16,10 @@ interface CookiesInterface
     public function exists($name);
 
     /**
-     * @param string $name
+     * Read a cookie with the given name
+     *
+     * @param  string $name
+     * @return mixed
      */
     public function get($name);
 

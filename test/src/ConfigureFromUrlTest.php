@@ -2,7 +2,7 @@
 
 namespace ActiveCollab\Cookies\Test;
 
-use ActiveCollab\Cookies\Adapter\Test;
+use ActiveCollab\Cookies\Test\Adapter\Test;
 use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\Test\Base\TestCase;
