@@ -2,10 +2,12 @@
 
 namespace ActiveCollab\Cookies\Test;
 
-use ActiveCollab\Cookies\Test\Adapter\Test;
+use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\Test\Base\TestCase;
+use Dflydev\FigCookies\Cookie as FigCookie;
+use Dflydev\FigCookies\Cookies as FigCookies;
 
 /**
  * @package ActiveCollab\Cookies\Test
@@ -24,10 +26,12 @@ class PrefixTest extends TestCase
     {
         parent::setUp();
 
-        $this->cookies = (new Cookies(new Test([
+        $this->setCookies([
             'other_websites_cookie' => 123,
             'prefix_test_our_cookie' => 987,
-        ])))->prefix('prefix_test_');
+        ]);
+
+        $this->cookies = (new Cookies(new Adapter()))->prefix('prefix_test_');
     }
 
     /**
@@ -35,8 +39,8 @@ class PrefixTest extends TestCase
      */
     public function testExists()
     {
-        $this->assertFalse($this->cookies->exists('other_websites_cookie'));
-        $this->assertTrue($this->cookies->exists('our_cookie'));
+        $this->assertFalse($this->cookies->exists($this->request, 'other_websites_cookie'));
+        $this->assertTrue($this->cookies->exists($this->request, 'our_cookie'));
     }
 
     /**
@@ -44,8 +48,8 @@ class PrefixTest extends TestCase
      */
     public function testGet()
     {
-        $this->assertEmpty($this->cookies->get('other_websites_cookie'));
-        $this->assertSame(987, $this->cookies->get('our_cookie'));
+        $this->assertEmpty($this->cookies->get($this->request, 'other_websites_cookie'));
+        $this->assertSame('987', $this->cookies->get($this->request, 'our_cookie'));
     }
 
     /**
@@ -53,10 +57,11 @@ class PrefixTest extends TestCase
      */
     public function testSet()
     {
-        $this->assertFalse($this->cookies->exists('new_cookie'));
-        $this->cookies->set('new_cookie', 'new_cookie_value');
-        $this->assertTrue($this->cookies->exists('new_cookie'));
-        $this->assertSame('new_cookie_value', $this->cookies->get('new_cookie'));
+        $this->assertFalse($this->cookies->exists($this->request, 'new_cookie'));
+        list($this->request, $this->response) = $this->cookies->set($this->request, $this->response, 'new_cookie', 'new_cookie_value');
+
+        $this->assertTrue($this->cookies->exists($this->request, 'new_cookie'));
+        $this->assertSame('new_cookie_value', $this->cookies->get($this->request, 'new_cookie'));
     }
 
     /**
@@ -64,8 +69,25 @@ class PrefixTest extends TestCase
      */
     public function testRemove()
     {
-        $this->assertTrue($this->cookies->exists('our_cookie'));
-        $this->cookies->remove('our_cookie');
-        $this->assertFalse($this->cookies->exists('our_cookie'));
+        $this->assertTrue($this->cookies->exists($this->request, 'our_cookie'));
+        list($this->request, $this->response) = $this->cookies->remove($this->request, $this->response, 'our_cookie');
+        
+        $this->assertFalse($this->cookies->exists($this->request, 'our_cookie'));
+    }
+
+    /**
+     * Add cookies to the request
+     *
+     * @param array $cookies
+     */
+    private function setCookies(array $cookies)
+    {
+        $cookie_jar = FigCookies::fromRequest($this->request);
+
+        foreach ($cookies as $k => $v) {
+            $cookie_jar = $cookie_jar->with(new FigCookie($k, $v));
+        }
+
+        $this->request = $cookie_jar->renderIntoCookieHeader($this->request);
     }
 }

@@ -30,18 +30,30 @@ interface AdapterInterface
     public function get(ServerRequestInterface $request, $name, $default = null);
 
     /**
-     * @param  ResponseInterface $response
-     * @param  string            $name
-     * @param  string            $value
-     * @param  integer           $ttl
-     * @param  bool              $http_only
-     * @return mixed
+     * Set or modify a cookie value
+     *
+     * Available settings:
+     *
+     * - domain
+     * - path
+     * - ttl
+     * - secure
+     * - http_only
+     *
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
+     * @param  string                 $name
+     * @param  string                 $value
+     * @param  array                  $settings
+     * @return array
      */
-    public function set(ResponseInterface $response, $name, $value, $ttl, $http_only);
+    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = []);
 
     /**
-     * @param ResponseInterface $response
-     * @param string            $name
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $response
+     * @param  string                 $name
+     * @return  array
      */
-    public function remove(ResponseInterface $response, $name);
+    public function remove(ServerRequestInterface $request, ResponseInterface $response, $name);
 }

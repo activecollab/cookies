@@ -38,27 +38,47 @@ class Cookies implements CookiesInterface
      */
     public function get(ServerRequestInterface $request, $name, $default = null)
     {
-        return $this->adapter->get($request, $this->getPrefixedName($name), $default);
-    }
+        $value = $this->adapter->get($request, $this->getPrefixedName($name), $default);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function set(ResponseInterface $response, $name, $value, $ttl = null, $http_only = true)
-    {
-        if (empty($ttl)) {
-            $ttl = $this->default_ttl;
+        if ($this->encryptor) {
+            $value = $this->encryptor->decrypt($value);
         }
 
-        $this->adapter->set($response, $this->getPrefixedName($name), $value, time() + $ttl, $http_only);
+        return $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function remove(ResponseInterface $response, $name)
+    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = [], $ttl = null, $http_only = true)
     {
-        $this->adapter->remove($response, $this->getPrefixedName($name));
+        $settings['domain'] = $this->getDomain();
+        $settings['path'] = $this->getPath();
+        $settings['secure'] = $this->getSecure();
+
+        if (empty($settings['ttl'])) {
+            $settings['ttl'] = time();
+        } else {
+            $settings['ttl'] = time() + $settings['ttl'];
+        }
+
+        if (empty($settings['http_only'])) {
+            $settings['http_only'] = false;
+        }
+
+        if ($this->encryptor) {
+            $value = $this->encryptor->encrypt($value);
+        }
+
+        return $this->adapter->set($request, $response, $this->getPrefixedName($name), $value, $settings);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove(ServerRequestInterface $request, ResponseInterface $response, $name)
+    {
+        return $this->adapter->remove($request, $response, $this->getPrefixedName($name));
     }
 
     /**
@@ -222,10 +242,25 @@ class Cookies implements CookiesInterface
     }
 
     /**
+     * @var EncryptorInterface|null
+     */
+    private $encryptor;
+
+    /**
+     * @return EncryptorInterface|null
+     */
+    public function getEncryptor()
+    {
+        return $this->encryptor;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function &encryptor(EncryptorInterface $encryptor)
+    public function &encryptor(EncryptorInterface $encryptor = null)
     {
+        $this->encryptor = $encryptor;
+
         return $this;
     }
 }
