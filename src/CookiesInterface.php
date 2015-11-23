@@ -2,41 +2,13 @@
 
 namespace ActiveCollab\Cookies;
 
+use ActiveCollab\Cookies\Adapter\AdapterInterface;
+
 /**
  * @package ActiveCollab\Cookies
  */
-interface CookiesInterface
+interface CookiesInterface extends AdapterInterface
 {
-    /**
-     * Return true if cookie with the given name exists
-     *
-     * @param  string  $name
-     * @return boolean
-     */
-    public function exists($name);
-
-    /**
-     * Read a cookie with the given name
-     *
-     * @param  string $name
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public function get($name, $default = null);
-
-    /**
-     * @param string       $name
-     * @param mixed        $value
-     * @param integer|null $ttl
-     * @param bool|true    $http_only
-     */
-    public function set($name, $value, $ttl = null, $http_only = true);
-
-    /**
-     * @param string $name
-     */
-    public function remove($name);
-
     /**
      * @return integer
      */

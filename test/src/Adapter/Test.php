@@ -3,6 +3,8 @@
 namespace ActiveCollab\Cookies\Test\Adapter;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @package ActiveCollab\Cookies\Adapter
@@ -25,7 +27,7 @@ class Test implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function exists($name)
+    public function exists(ServerRequestInterface $request, $name)
     {
         return array_key_exists($name, $this->data);
     }
@@ -33,7 +35,7 @@ class Test implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function get($name, $default = null)
+    public function get(ServerRequestInterface $request, $name, $default = null)
     {
         return isset($this->data[$name]) ? $this->data[$name] : $default;
     }
@@ -41,7 +43,7 @@ class Test implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function set($name, $value, $ttl, $http_only)
+    public function set(ResponseInterface $response, $name, $value, $ttl, $http_only)
     {
         $this->data[$name] = $value;
     }
@@ -49,9 +51,9 @@ class Test implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function remove($name)
+    public function remove(ResponseInterface $response, $name)
     {
-        if ($this->exists($name)) {
+        if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
         }
     }

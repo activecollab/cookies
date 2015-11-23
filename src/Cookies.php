@@ -4,6 +4,8 @@ namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
 use ActiveCollab\Cookies\Encryptor\EncryptorInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @package ActiveCollab\Cookies
@@ -26,47 +28,41 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function exists($name)
+    public function exists(ServerRequestInterface $request, $name)
     {
-        return $this->adapter->exists($this->getPrefixedName($name));
+        return $this->adapter->exists($request, $this->getPrefixedName($name));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($name, $default = null)
+    public function get(ServerRequestInterface $request, $name, $default = null)
     {
-        return $this->adapter->get($this->getPrefixedName($name), $default);
+        return $this->adapter->get($request, $this->getPrefixedName($name), $default);
     }
 
     /**
-     * @param string       $name
-     * @param mixed        $value
-     * @param integer|null $ttl
-     * @param bool|true    $http_only
+     * {@inheritdoc}
      */
-    public function set($name, $value, $ttl = null, $http_only = true)
+    public function set(ResponseInterface $response, $name, $value, $ttl = null, $http_only = true)
     {
         if (empty($ttl)) {
             $ttl = $this->default_ttl;
         }
 
-        $this->adapter->set($this->getPrefixedName($name), $value, time() + $ttl, $http_only);
+        $this->adapter->set($response, $this->getPrefixedName($name), $value, time() + $ttl, $http_only);
     }
 
     /**
-     * @param string $name
+     * {@inheritdoc}
      */
-    public function remove($name)
+    public function remove(ResponseInterface $response, $name)
     {
-        $this->adapter->remove($this->getPrefixedName($name));
+        $this->adapter->remove($response, $this->getPrefixedName($name));
     }
 
     /**
-     * Return key name based on cookie name
-     *
-     * @param  string $name
-     * @return string
+     * {@inheritdoc}
      */
     private function getPrefixedName($name)
     {
