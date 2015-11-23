@@ -71,7 +71,7 @@ class PrefixTest extends TestCase
     {
         $this->assertTrue($this->cookies->exists($this->request, 'our_cookie'));
         list($this->request, $this->response) = $this->cookies->remove($this->request, $this->response, 'our_cookie');
-        
+
         $this->assertFalse($this->cookies->exists($this->request, 'our_cookie'));
     }
 
