@@ -6,6 +6,11 @@ use InvalidArgumentException;
 use RuntimeException;
 
 /**
+ * Encrypt and decrypt values
+ *
+ * Built on Nelmio Security Bundle encryptor:
+ * https://github.com/nelmio/NelmioSecurityBundle/blob/master/Encrypter.php
+ *
  * @package ActiveCollab\Cookies\Encryptor
  */
 class Encryptor implements EncryptorInterface
