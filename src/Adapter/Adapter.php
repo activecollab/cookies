@@ -94,10 +94,5 @@ class Adapter implements AdapterInterface
         $request = Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request);
 
         return [$request, $response];
-
-        return [
-            Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request),
-            SetCookies::fromResponse($response)->without($name)->renderIntoSetCookieHeader($response),
-        ];
     }
 }
