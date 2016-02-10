@@ -89,6 +89,12 @@ class Adapter implements AdapterInterface
      */
     public function remove(ServerRequestInterface $request, ResponseInterface $response, $name)
     {
+        list ($request, $response) = $this->set($request, $response, $name, '', ['ttl' => -172800]);
+
+        $request = Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request);
+
+        return [$request, $response];
+
         return [
             Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request),
             SetCookies::fromResponse($response)->without($name)->renderIntoSetCookieHeader($response),
