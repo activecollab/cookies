@@ -26,7 +26,7 @@ interface CookiesInterface extends AdapterInterface
      * @param  int   $value
      * @return $this
      */
-    public function &defaultTtl($value);
+    public function defaultTtl($value);
 
     /**
      * Return cookie domain.
@@ -41,7 +41,7 @@ interface CookiesInterface extends AdapterInterface
      * @param  string $domain
      * @return $this
      */
-    public function &domain($domain);
+    public function domain($domain);
 
     /**
      * @return $this
@@ -54,7 +54,7 @@ interface CookiesInterface extends AdapterInterface
      * @param  string $path
      * @return $this
      */
-    public function &path($path);
+    public function path($path);
 
     /**
      * Return true if cookie should be transfmitted only via secure connection.
@@ -69,7 +69,7 @@ interface CookiesInterface extends AdapterInterface
      * @param  bool  $secure
      * @return $this
      */
-    public function &secure($secure);
+    public function secure($secure);
 
     /**
      * Return variable name prefix.
@@ -84,7 +84,7 @@ interface CookiesInterface extends AdapterInterface
      * @param  string $prefix
      * @return $this
      */
-    public function &prefix($prefix);
+    public function prefix($prefix);
 
     /**
      * Configure cookie domain, secure flag and domain from URL.
@@ -92,5 +92,5 @@ interface CookiesInterface extends AdapterInterface
      * @param  string $url
      * @return $this
      */
-    public function &configureFromUrl($url);
+    public function configureFromUrl($url);
 }

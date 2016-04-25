@@ -120,7 +120,7 @@ class Cookies implements CookiesInterface
      * @param  int   $value
      * @return $this
      */
-    public function &defaultTtl($value)
+    public function defaultTtl($value)
     {
         $this->default_ttl = $value;
 
@@ -143,7 +143,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &domain($domain)
+    public function domain($domain)
     {
         $this->domain = $domain;
 
@@ -166,7 +166,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &path($path)
+    public function path($path)
     {
         $this->path = $path;
 
@@ -189,7 +189,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &secure($secure)
+    public function secure($secure)
     {
         $this->secure = (boolean) $secure;
 
@@ -212,7 +212,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &prefix($prefix)
+    public function prefix($prefix)
     {
         $this->prefix = $prefix;
 
@@ -222,7 +222,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &configureFromUrl($url)
+    public function configureFromUrl($url)
     {
         $parts = parse_url($url);
 
@@ -263,7 +263,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &encryptor(EncryptorInterface $encryptor = null)
+    public function encryptor(EncryptorInterface $encryptor = null)
     {
         $this->encryptor = $encryptor;
 
