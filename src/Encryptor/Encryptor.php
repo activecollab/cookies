@@ -9,7 +9,6 @@
 namespace ActiveCollab\Cookies\Encryptor;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 /**
  * Encrypt and decrypt values.
