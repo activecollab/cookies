@@ -91,18 +91,18 @@ class Encryptor implements EncryptorInterface
             return null;
         }
 
-        $encryptedData = base64_decode($value, true);
-        $iv = substr($encryptedData, 0, $this->iv_size);
+        $encrypted_data = base64_decode($value, true);
+        $iv = substr($encrypted_data, 0, $this->iv_size);
         if (strlen($iv) < $this->iv_size) {
             return null;
         }
 
-        $encryptedData = substr($encryptedData, $this->iv_size);
-        $init = @mcrypt_generic_init($this->module, $this->secret, $iv);
+        $encrypted_data = substr($encrypted_data, $this->iv_size);
+        $init = mcrypt_generic_init($this->module, $this->secret, $iv);
         if ($init === false || $init < 0) {
             return null;
         }
 
-        return rtrim(mdecrypt_generic($this->module, $encryptedData), "\0");
+        return rtrim(mdecrypt_generic($this->module, $encrypted_data), "\0");
     }
 }
