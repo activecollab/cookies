@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Authentication project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Encryptor;
 
 use InvalidArgumentException;
 use RuntimeException;
 
 /**
- * Encrypt and decrypt values
+ * Encrypt and decrypt values.
  *
  * Built on Nelmio Security Bundle encryptor:
  * https://github.com/nelmio/NelmioSecurityBundle/blob/master/Encrypter.php
@@ -71,6 +77,7 @@ class Encryptor implements EncryptorInterface
 
         $iv = mcrypt_create_iv($this->iv_size, MCRYPT_RAND);
         mcrypt_generic_init($this->module, $this->secret, $iv);
+
         return rtrim(base64_encode($iv . mcrypt_generic($this->module, (string) $value)), '=');
     }
 

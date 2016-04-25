@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Authentication project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
 use ActiveCollab\Cookies\Encryptor\EncryptorInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @package ActiveCollab\Cookies
@@ -94,14 +100,14 @@ class Cookies implements CookiesInterface
     // ---------------------------------------------------
 
     /**
-     * Default TTL (14 days)
+     * Default TTL (14 days).
      *
-     * @var integer
+     * @var int
      */
     private $default_ttl = 1209600;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getDefaultTtl()
     {
@@ -109,9 +115,9 @@ class Cookies implements CookiesInterface
     }
 
     /**
-     * Set default cookie TTL (time to live)
+     * Set default cookie TTL (time to live).
      *
-     * @param  integer $value
+     * @param  int   $value
      * @return $this
      */
     public function &defaultTtl($value)

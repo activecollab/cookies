@@ -1,10 +1,16 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Authentication project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Test;
 
 use ActiveCollab\Cookies\Adapter\Adapter;
-use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Cookies;
+use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Test\Base\TestCase;
 
 /**
@@ -18,7 +24,7 @@ class ConfigureFromUrlTest extends TestCase
     private $cookies;
 
     /**
-     * Set up test environment
+     * Set up test environment.
      */
     public function setUp()
     {
@@ -28,7 +34,7 @@ class ConfigureFromUrlTest extends TestCase
     }
 
     /**
-     * Test domain
+     * Test domain.
      */
     public function testDomain()
     {
@@ -36,7 +42,7 @@ class ConfigureFromUrlTest extends TestCase
     }
 
     /**
-     * Test path from URL
+     * Test path from URL.
      */
     public function testPath()
     {
@@ -47,7 +53,7 @@ class ConfigureFromUrlTest extends TestCase
     }
 
     /**
-     * Test non-secure on HTTP
+     * Test non-secure on HTTP.
      */
     public function testNotSecureOnHttp()
     {
@@ -55,7 +61,7 @@ class ConfigureFromUrlTest extends TestCase
     }
 
     /**
-     * Test secure on HTTPS
+     * Test secure on HTTPS.
      */
     public function testSecureOnHttps()
     {
@@ -63,7 +69,7 @@ class ConfigureFromUrlTest extends TestCase
     }
 
     /**
-     * Test prefix is URL hash when prefix is not set
+     * Test prefix is URL hash when prefix is not set.
      */
     public function testPrefixIsUrlHash()
     {
@@ -71,7 +77,7 @@ class ConfigureFromUrlTest extends TestCase
     }
 
     /**
-     * Test if prefix is not auto-set when it is already set
+     * Test if prefix is not auto-set when it is already set.
      */
     public function testPrefixIsNotSetIfAlreadySet()
     {

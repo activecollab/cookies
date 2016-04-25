@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Authentication project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
@@ -10,27 +16,27 @@ use ActiveCollab\Cookies\Adapter\AdapterInterface;
 interface CookiesInterface extends AdapterInterface
 {
     /**
-     * @return integer
+     * @return int
      */
     public function getDefaultTtl();
 
     /**
-     * Set default cookie TTL (time to live)
+     * Set default cookie TTL (time to live).
      *
-     * @param  integer $value
+     * @param  int   $value
      * @return $this
      */
     public function &defaultTtl($value);
 
     /**
-     * Return cookie domain
+     * Return cookie domain.
      *
      * @return string
      */
     public function getDomain();
 
     /**
-     * Set cookie domain
+     * Set cookie domain.
      *
      * @param  string $domain
      * @return $this
@@ -43,7 +49,7 @@ interface CookiesInterface extends AdapterInterface
     public function getPath();
 
     /**
-     * Set cookie path
+     * Set cookie path.
      *
      * @param  string $path
      * @return $this
@@ -51,29 +57,29 @@ interface CookiesInterface extends AdapterInterface
     public function &path($path);
 
     /**
-     * Return true if cookie should be transfmitted only via secure connection
+     * Return true if cookie should be transfmitted only via secure connection.
      *
-     * @return boolean
+     * @return bool
      */
     public function getSecure();
 
     /**
-     * Set whether cookies should be transmitted only via secure connection
+     * Set whether cookies should be transmitted only via secure connection.
      *
-     * @param  boolean $secure
+     * @param  bool  $secure
      * @return $this
      */
     public function &secure($secure);
 
     /**
-     * Return variable name prefix
+     * Return variable name prefix.
      *
      * @return string
      */
     public function getPrefix();
 
     /**
-     * Set variable name prefix
+     * Set variable name prefix.
      *
      * @param  string $prefix
      * @return $this
@@ -81,7 +87,7 @@ interface CookiesInterface extends AdapterInterface
     public function &prefix($prefix);
 
     /**
-     * Configure cookie domain, secure flag and domain from URL
+     * Configure cookie domain, secure flag and domain from URL.
      *
      * @param  string $url
      * @return $this

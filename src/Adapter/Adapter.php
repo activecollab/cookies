@@ -1,13 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Authentication project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Adapter;
 
 use Dflydev\FigCookies\Cookie;
 use Dflydev\FigCookies\Cookies;
 use Dflydev\FigCookies\SetCookie;
 use Dflydev\FigCookies\SetCookies;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @package ActiveCollab\Cookies\Adapter
@@ -89,7 +95,7 @@ class Adapter implements AdapterInterface
      */
     public function remove(ServerRequestInterface $request, ResponseInterface $response, $name)
     {
-        list ($request, $response) = $this->set($request, $response, $name, '', ['ttl' => -172800]);
+        list($request, $response) = $this->set($request, $response, $name, '', ['ttl' => -172800]);
 
         $request = Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request);
 
