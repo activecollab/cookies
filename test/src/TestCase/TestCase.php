@@ -1,12 +1,12 @@
 <?php
 
 /*
- * This file is part of the Active Collab Authentication project.
+ * This file is part of the Active Collab Cookies project.
  *
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
-namespace ActiveCollab\Cookies\Test\Base;
+namespace ActiveCollab\Cookies\Test\TestCase;
 
 use Pimple\Container;
 use Slim\CallableResolver;

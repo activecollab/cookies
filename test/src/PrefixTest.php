@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Active Collab Authentication project.
+ * This file is part of the Active Collab Cookies project.
  *
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
@@ -11,7 +11,7 @@ namespace ActiveCollab\Cookies\Test;
 use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\CookiesInterface;
-use ActiveCollab\Cookies\Test\Base\TestCase;
+use ActiveCollab\Cookies\Test\TestCase\TestCase;
 use Dflydev\FigCookies\Cookie as FigCookie;
 use Dflydev\FigCookies\Cookies as FigCookies;
 
