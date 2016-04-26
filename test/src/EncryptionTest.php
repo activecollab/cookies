@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Cookies project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Test;
 
 use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\Encryptor\Encryptor;
-use ActiveCollab\Cookies\Test\Base\TestCase;
+use ActiveCollab\Cookies\Test\TestCase\TestCase;
 use Dflydev\FigCookies\Cookies as FigCookies;
 
 /**
@@ -30,7 +36,7 @@ class EncryptionTest extends TestCase
     }
 
     /**
-     * Test value encryption
+     * Test value encryption.
      */
     public function testEncryption()
     {

@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Cookies project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Test;
 
 use ActiveCollab\Cookies\Adapter\Adapter;
-use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Cookies;
-use ActiveCollab\Cookies\Test\Base\TestCase;
+use ActiveCollab\Cookies\CookiesInterface;
+use ActiveCollab\Cookies\Test\TestCase\TestCase;
 use Dflydev\FigCookies\Cookie as FigCookie;
 use Dflydev\FigCookies\Cookies as FigCookies;
 
@@ -20,7 +26,7 @@ class PrefixTest extends TestCase
     private $cookies;
 
     /**
-     * Set up test environment
+     * Set up test environment.
      */
     public function setUp()
     {
@@ -35,7 +41,7 @@ class PrefixTest extends TestCase
     }
 
     /**
-     * Test if exists checks for prefixed values
+     * Test if exists checks for prefixed values.
      */
     public function testExists()
     {
@@ -44,7 +50,7 @@ class PrefixTest extends TestCase
     }
 
     /**
-     * Test if get returns prefixed values
+     * Test if get returns prefixed values.
      */
     public function testGet()
     {
@@ -53,7 +59,7 @@ class PrefixTest extends TestCase
     }
 
     /**
-     * Test if set adds prefixed cookied value
+     * Test if set adds prefixed cookied value.
      */
     public function testSet()
     {
@@ -65,7 +71,7 @@ class PrefixTest extends TestCase
     }
 
     /**
-     * Test if remove unsets prefixed cookie value
+     * Test if remove unsets prefixed cookie value.
      */
     public function testRemove()
     {
@@ -76,7 +82,7 @@ class PrefixTest extends TestCase
     }
 
     /**
-     * Add cookies to the request
+     * Add cookies to the request.
      *
      * @param array $cookies
      */

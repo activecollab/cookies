@@ -1,11 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Cookies project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
 use ActiveCollab\Cookies\Encryptor\EncryptorInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @package ActiveCollab\Cookies
@@ -94,14 +100,14 @@ class Cookies implements CookiesInterface
     // ---------------------------------------------------
 
     /**
-     * Default TTL (14 days)
+     * Default TTL (14 days).
      *
-     * @var integer
+     * @var int
      */
     private $default_ttl = 1209600;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getDefaultTtl()
     {
@@ -109,12 +115,12 @@ class Cookies implements CookiesInterface
     }
 
     /**
-     * Set default cookie TTL (time to live)
+     * Set default cookie TTL (time to live).
      *
-     * @param  integer $value
+     * @param  int   $value
      * @return $this
      */
-    public function &defaultTtl($value)
+    public function defaultTtl($value)
     {
         $this->default_ttl = $value;
 
@@ -137,7 +143,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &domain($domain)
+    public function domain($domain)
     {
         $this->domain = $domain;
 
@@ -160,7 +166,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &path($path)
+    public function path($path)
     {
         $this->path = $path;
 
@@ -183,7 +189,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &secure($secure)
+    public function secure($secure)
     {
         $this->secure = (boolean) $secure;
 
@@ -206,7 +212,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &prefix($prefix)
+    public function prefix($prefix)
     {
         $this->prefix = $prefix;
 
@@ -216,7 +222,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &configureFromUrl($url)
+    public function configureFromUrl($url)
     {
         $parts = parse_url($url);
 
@@ -257,7 +263,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function &encryptor(EncryptorInterface $encryptor = null)
+    public function encryptor(EncryptorInterface $encryptor = null)
     {
         $this->encryptor = $encryptor;
 

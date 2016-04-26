@@ -1,23 +1,29 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Cookies project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Adapter;
 
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Interface AdapterInterface
+ * Interface AdapterInterface.
  *
  * @package ActiveCollab\Cookies
  */
 interface AdapterInterface
 {
     /**
-     * Return true if cookie with the given name exists
+     * Return true if cookie with the given name exists.
      *
      * @param  ServerRequestInterface $request
      * @param  string                 $name
-     * @return boolean
+     * @return bool
      */
     public function exists(ServerRequestInterface $request, $name);
 
@@ -30,7 +36,7 @@ interface AdapterInterface
     public function get(ServerRequestInterface $request, $name, $default = null);
 
     /**
-     * Set or modify a cookie value
+     * Set or modify a cookie value.
      *
      * Available settings:
      *
@@ -53,7 +59,7 @@ interface AdapterInterface
      * @param  ServerRequestInterface $request
      * @param  ResponseInterface      $response
      * @param  string                 $name
-     * @return  array
+     * @return array
      */
     public function remove(ServerRequestInterface $request, ResponseInterface $response, $name);
 }

@@ -1,12 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Cookies project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 namespace ActiveCollab\Cookies\Encryptor;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 /**
- * Encrypt and decrypt values
+ * Encrypt and decrypt values.
  *
  * Built on Nelmio Security Bundle encryptor:
  * https://github.com/nelmio/NelmioSecurityBundle/blob/master/Encrypter.php
@@ -48,10 +53,6 @@ class Encryptor implements EncryptorInterface
         $this->secret = substr($secret, 0, 32);
         $this->algorithm = $algorithm;
 
-        if (!function_exists('mcrypt_module_open')) {
-            throw new RuntimeException('You need to install mcrypt if you want to encrypt your cookies');
-        }
-
         $this->module = @mcrypt_module_open($this->algorithm, '', MCRYPT_MODE_CBC, '');
         if ($this->module === false) {
             throw new InvalidArgumentException("The supplied encryption algorithm '$this->algorithm' is not supported by this system");
@@ -71,6 +72,7 @@ class Encryptor implements EncryptorInterface
 
         $iv = mcrypt_create_iv($this->iv_size, MCRYPT_RAND);
         mcrypt_generic_init($this->module, $this->secret, $iv);
+
         return rtrim(base64_encode($iv . mcrypt_generic($this->module, (string) $value)), '=');
     }
 
@@ -84,18 +86,18 @@ class Encryptor implements EncryptorInterface
             return null;
         }
 
-        $encryptedData = base64_decode($value, true);
-        $iv = substr($encryptedData, 0, $this->iv_size);
+        $encrypted_data = base64_decode($value, true);
+        $iv = substr($encrypted_data, 0, $this->iv_size);
         if (strlen($iv) < $this->iv_size) {
             return null;
         }
 
-        $encryptedData = substr($encryptedData, $this->iv_size);
-        $init = @mcrypt_generic_init($this->module, $this->secret, $iv);
+        $encrypted_data = substr($encrypted_data, $this->iv_size);
+        $init = mcrypt_generic_init($this->module, $this->secret, $iv);
         if ($init === false || $init < 0) {
             return null;
         }
 
-        return rtrim(mdecrypt_generic($this->module, $encryptedData), "\0");
+        return rtrim(mdecrypt_generic($this->module, $encrypted_data), "\0");
     }
 }
