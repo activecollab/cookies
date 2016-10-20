@@ -21,18 +21,32 @@ class EncryptionTest extends TestCase
 {
     /**
      * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Key needs to be a non-empty string value
      */
-    public function testExceptionOnEmptySecret()
+    public function testExceptionOnEmptyKey()
     {
-        new Encryptor('', MCRYPT_RIJNDAEL_128);
+        new Encryptor('');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionOnInvalidAlgorithm()
+    public function testAcceptableKeys()
     {
-        new Encryptor('valid secret', 'not a valid algo');
+        new Encryptor('not 256 bit');
+        new Encryptor('770A8A65DA156D24EE2A093277530142');
+    }
+
+    public function testEncryptAndDecryptValues()
+    {
+        $encryptor = new Encryptor('770A8A65DA156D24EE2A093277530142');
+
+        $value_to_encrypt = 'Super secret value';
+
+        $encrypted_value = $encryptor->encrypt($value_to_encrypt);
+
+        $this->assertInternalType('string', $encrypted_value);
+        $this->assertNotEmpty($encrypted_value);
+        $this->assertNotEquals($value_to_encrypt, $encrypted_value);
+
+        $this->assertEquals('Super secret value', $encryptor->decrypt($encrypted_value));
     }
 
     /**
@@ -40,7 +54,7 @@ class EncryptionTest extends TestCase
      */
     public function testEncryption()
     {
-        $cookies = (new Cookies(new Adapter()))->encryptor(new Encryptor('this is a secret', MCRYPT_RIJNDAEL_256));
+        $cookies = (new Cookies(new Adapter()))->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
 
         list($this->request, $this->response) = $cookies->set($this->request, $this->response, 'encrypted_var', 'value to encrypt');
 

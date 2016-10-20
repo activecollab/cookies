@@ -13,27 +13,22 @@ use InvalidArgumentException;
 /**
  * Encrypt and decrypt values.
  *
- * Built on Nelmio Security Bundle encryptor:
+ * Inspired by Nelmio Security Bundle encryptor:
  * https://github.com/nelmio/NelmioSecurityBundle/blob/master/Encrypter.php
+ *
+ * and refactored to use OpenSSL based on this article:
+ * https://paragonie.com/blog/2015/05/if-you-re-typing-word-mcrypt-into-your-code-you-re-doing-it-wrong
  *
  * @package ActiveCollab\Cookies\Encryptor
  */
 class Encryptor implements EncryptorInterface
 {
-    /**
-     * @var resource
-     */
-    private $module;
+    const METHOD = 'aes-256-cbc';
 
     /**
      * @var string
      */
-    private $secret;
-
-    /**
-     * @var string
-     */
-    private $algorithm;
+    private $key;
 
     /**
      * @var int
@@ -41,23 +36,16 @@ class Encryptor implements EncryptorInterface
     private $iv_size;
 
     /**
-     * @param string $secret
-     * @param string $algorithm
+     * @param string $key
      */
-    public function __construct($secret, $algorithm = MCRYPT_RIJNDAEL_256)
+    public function __construct($key)
     {
-        if (empty($secret)) {
-            throw new InvalidArgumentException('Encryption secret not provided');
+        if (!is_string($key) || empty($key)) {
+            throw new InvalidArgumentException('Key needs to be a non-empty string value');
         }
 
-        $this->secret = substr($secret, 0, 32);
-        $this->algorithm = $algorithm;
-
-        $this->module = @mcrypt_module_open($this->algorithm, '', MCRYPT_MODE_CBC, '');
-        if ($this->module === false) {
-            throw new InvalidArgumentException("The supplied encryption algorithm '$this->algorithm' is not supported by this system");
-        }
-        $this->iv_size = mcrypt_enc_get_iv_size($this->module);
+        $this->key = $key;
+        $this->iv_size = openssl_cipher_iv_length(self::METHOD);
     }
 
     /**
@@ -70,10 +58,8 @@ class Encryptor implements EncryptorInterface
             return null;
         }
 
-        $iv = mcrypt_create_iv($this->iv_size, MCRYPT_RAND);
-        mcrypt_generic_init($this->module, $this->secret, $iv);
-
-        return rtrim(base64_encode($iv . mcrypt_generic($this->module, (string) $value)), '=');
+        $iv = openssl_random_pseudo_bytes($this->iv_size);
+        return base64_encode(openssl_encrypt($value, self::METHOD, $this->key, OPENSSL_RAW_DATA, $iv)) . ':' . base64_encode($iv);
     }
 
     /**
@@ -86,18 +72,12 @@ class Encryptor implements EncryptorInterface
             return null;
         }
 
-        $encrypted_data = base64_decode($value, true);
-        $iv = substr($encrypted_data, 0, $this->iv_size);
-        if (strlen($iv) < $this->iv_size) {
-            return null;
+        $separated_data = explode(':', $value);
+
+        if (count($separated_data) != 2) {
+            throw new InvalidArgumentException('Separator not found in the encrypted data');
         }
 
-        $encrypted_data = substr($encrypted_data, $this->iv_size);
-        $init = mcrypt_generic_init($this->module, $this->secret, $iv);
-        if ($init === false || $init < 0) {
-            return null;
-        }
-
-        return rtrim(mdecrypt_generic($this->module, $encrypted_data), "\0");
+        return openssl_decrypt(base64_decode($separated_data[0], true), self::METHOD, $this->key, OPENSSL_RAW_DATA, base64_decode($separated_data[1], true));
     }
 }
