@@ -21,7 +21,6 @@
         "phpunit/phpunit": "~5.3",
         "slim/slim" : "3.3.0"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "ActiveCollab\\Cookies\\": "src"

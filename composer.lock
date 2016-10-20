@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6f4ef62a27f7d481e9324c1883fc252f",
-    "content-hash": "4feb53c54ff34d034bdd5a63fa1115d1",
+    "hash": "0a3b07c62ae65991af3a5f5326587bb9",
+    "content-hash": "bd30a80dc32394a2a5b6800a265f1d27",
     "packages": [
         {
             "name": "dflydev/fig-cookies",
@@ -1597,7 +1597,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
