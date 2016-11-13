@@ -10,6 +10,8 @@ namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
 use ActiveCollab\Cookies\Encryptor\EncryptorInterface;
+use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
+use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -24,11 +26,22 @@ class Cookies implements CookiesInterface
     private $adapter;
 
     /**
-     * @param AdapterInterface $adapter
+     * @var CurrentTimestamp
      */
-    public function __construct(AdapterInterface $adapter)
+    private $current_timestamp;
+
+    /**
+     * @param AdapterInterface               $adapter
+     * @param CurrentTimestampInterface|null $current_timestamp
+     */
+    public function __construct(AdapterInterface $adapter, CurrentTimestampInterface $current_timestamp = null)
     {
         $this->adapter = $adapter;
+        $this->current_timestamp = $current_timestamp;
+
+        if (empty($this->current_timestamp)) {
+            $this->current_timestamp = new CurrentTimestamp();
+        }
     }
 
     /**
@@ -56,16 +69,14 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = [], $ttl = null, $http_only = true)
+    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = [])
     {
         $settings['domain'] = $this->getDomain();
         $settings['path'] = $this->getPath();
         $settings['secure'] = $this->getSecure();
 
         if (empty($settings['ttl'])) {
-            $settings['ttl'] = time();
-        } else {
-            $settings['ttl'] = time() + $settings['ttl'];
+            $settings['ttl'] = $this->getDefaultTtl();
         }
 
         if (empty($settings['http_only'])) {
@@ -75,6 +86,8 @@ class Cookies implements CookiesInterface
         if ($this->encryptor) {
             $value = $this->encryptor->encrypt($value);
         }
+
+        $settings['expires'] = $this->current_timestamp->getCurrentTimestamp() + $settings['ttl'];
 
         return $this->adapter->set($request, $response, $this->getPrefixedName($name), $value, $settings);
     }

@@ -67,7 +67,8 @@ class Adapter implements AdapterInterface
 
         $domain = isset($settings['domain']) ? (string) $settings['domain'] : '';
         $path = isset($settings['path']) ? (string) $settings['path'] : '/';
-        $ttl = isset($settings['ttl']) ? $settings['ttl'] : time();
+        $ttl = isset($settings['ttl']) ? $settings['ttl'] : 0;
+        $expires = isset($settings['expires']) ? $settings['expires'] : time() + $ttl;
         $secure = isset($settings['secure']) && $settings['secure'];
         $http_only = isset($settings['http_only']) && $settings['http_only'];
 
@@ -82,7 +83,7 @@ class Adapter implements AdapterInterface
         $set_cookie = $set_cookie->withDomain($domain)
             ->withPath($path)
             ->withSecure($secure)
-            ->withExpires(date(DATE_COOKIE, $ttl))
+            ->withExpires(date(DATE_COOKIE, $expires))
             ->withHttpOnly($http_only);
 
         $response = $set_cookies->with($set_cookie)->renderIntoSetCookieHeader($response);

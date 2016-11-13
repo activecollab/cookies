@@ -59,6 +59,7 @@ class Encryptor implements EncryptorInterface
         }
 
         $iv = openssl_random_pseudo_bytes($this->iv_size);
+
         return base64_encode(openssl_encrypt($value, self::METHOD, $this->key, OPENSSL_RAW_DATA, $iv)) . ':' . base64_encode($iv);
     }
 
