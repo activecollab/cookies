@@ -9,7 +9,7 @@
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
-use ActiveCollab\Cookies\Encryptor\EncryptorInterface;
+use ActiveCollab\Encryptor\EncryptorInterface;
 use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use Psr\Http\Message\ResponseInterface;
