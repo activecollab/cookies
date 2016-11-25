@@ -28,12 +28,19 @@ interface AdapterInterface
     public function exists(ServerRequestInterface $request, $name);
 
     /**
+     * Return a cookie value. If cookie is not found, $default is returned.
+     *
+     * Available settings:
+     *
+     * - decrypt
+     *
      * @param  ServerRequestInterface $request
      * @param  string                 $name
      * @param  mixed                  $default
+     * @param  array                  $settings
      * @return mixed
      */
-    public function get(ServerRequestInterface $request, $name, $default = null);
+    public function get(ServerRequestInterface $request, $name, $default = null, array $settings = []);
 
     /**
      * Set or modify a cookie value.

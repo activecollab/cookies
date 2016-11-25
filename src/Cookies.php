@@ -8,10 +8,11 @@
 
 namespace ActiveCollab\Cookies;
 
+use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
-use ActiveCollab\Encryptor\EncryptorInterface;
 use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
+use ActiveCollab\Encryptor\EncryptorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -31,12 +32,12 @@ class Cookies implements CookiesInterface
     private $current_timestamp;
 
     /**
-     * @param AdapterInterface               $adapter
+     * @param AdapterInterface|null          $adapter
      * @param CurrentTimestampInterface|null $current_timestamp
      */
-    public function __construct(AdapterInterface $adapter, CurrentTimestampInterface $current_timestamp = null)
+    public function __construct(AdapterInterface $adapter = null, CurrentTimestampInterface $current_timestamp = null)
     {
-        $this->adapter = $adapter;
+        $this->adapter = $adapter ? $adapter : new Adapter();
         $this->current_timestamp = $current_timestamp;
 
         if (empty($this->current_timestamp)) {
@@ -55,11 +56,13 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function get(ServerRequestInterface $request, $name, $default = null)
+    public function get(ServerRequestInterface $request, $name, $default = null, array $settings = [])
     {
         $value = $this->adapter->get($request, $this->getPrefixedName($name), $default);
 
-        if ($this->encryptor) {
+        $decrypt = array_key_exists('decrypt', $settings) ? (bool) $settings['decrypt'] : true;
+
+        if ($decrypt && $this->encryptor) {
             $value = $this->encryptor->decrypt($value);
         }
 
@@ -83,7 +86,9 @@ class Cookies implements CookiesInterface
             $settings['http_only'] = false;
         }
 
-        if ($this->encryptor) {
+        $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;
+
+        if ($encrypt && $this->encryptor) {
             $value = $this->encryptor->encrypt($value);
         }
 
@@ -204,7 +209,7 @@ class Cookies implements CookiesInterface
      */
     public function secure($secure)
     {
-        $this->secure = (boolean) $secure;
+        $this->secure = (bool) $secure;
 
         return $this;
     }

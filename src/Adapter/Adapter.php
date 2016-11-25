@@ -31,7 +31,7 @@ class Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function get(ServerRequestInterface $request, $name, $default = null)
+    public function get(ServerRequestInterface $request, $name, $default = null, array $settings = [])
     {
         $cookies = Cookies::fromRequest($request);
 
@@ -80,7 +80,8 @@ class Adapter implements AdapterInterface
             $set_cookie = SetCookie::create($name, $value);
         }
 
-        $set_cookie = $set_cookie->withDomain($domain)
+        $set_cookie = $set_cookie
+            ->withDomain($domain)
             ->withPath($path)
             ->withSecure($secure)
             ->withExpires(date(DATE_COOKIE, $expires))
