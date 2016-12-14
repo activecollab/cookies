@@ -15,7 +15,7 @@
     "require" : {
         "php": ">=5.6.0",
         "ext-openssl" : "*",
-        "activecollab/utils" : "^0.10",
+        "activecollab/utils" : "^1.0",
         "dflydev/fig-cookies" : "~1.0"
     },
     "require-dev" : {
