@@ -58,15 +58,19 @@ class Cookies implements CookiesInterface
      */
     public function get(ServerRequestInterface $request, $name, $default = null, array $settings = [])
     {
-        $value = $this->adapter->get($request, $this->getPrefixedName($name), $default);
+        if ($this->exists($request, $name)) {
+            $value = $this->adapter->get($request, $this->getPrefixedName($name), $default);
 
-        $decrypt = array_key_exists('decrypt', $settings) ? (bool) $settings['decrypt'] : true;
+            $decrypt = array_key_exists('decrypt', $settings) ? (bool) $settings['decrypt'] : true;
 
-        if ($decrypt && $this->encryptor) {
-            $value = $this->encryptor->decrypt($value);
+            if ($decrypt && $this->encryptor) {
+                $value = $this->encryptor->decrypt($value);
+            }
+
+            return $value;
         }
 
-        return $value;
+        return $default;
     }
 
     /**
