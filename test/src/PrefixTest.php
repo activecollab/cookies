@@ -8,7 +8,6 @@
 
 namespace ActiveCollab\Cookies\Test;
 
-use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Test\TestCase\TestCase;
@@ -37,7 +36,7 @@ class PrefixTest extends TestCase
             'prefix_test_our_cookie' => 987,
         ]);
 
-        $this->cookies = (new Cookies(new Adapter()))->prefix('prefix_test_');
+        $this->cookies = (new Cookies())->prefix('prefix_test_');
     }
 
     /**

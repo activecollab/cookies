@@ -8,7 +8,6 @@
 
 namespace ActiveCollab\Cookies\Test;
 
-use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\Test\TestCase\TestCase;
 use ActiveCollab\Encryptor\Encryptor;
@@ -24,7 +23,7 @@ class EncryptionTest extends TestCase
      */
     public function testCookieValueEncryption()
     {
-        $cookies = (new Cookies(new Adapter()))->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
+        $cookies = (new Cookies())->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
 
         list($this->request, $this->response) = $cookies->set($this->request, $this->response, 'encrypted_var', 'value to encrypt');
 
@@ -43,7 +42,7 @@ class EncryptionTest extends TestCase
 
     public function testCookieCanBeSetRawUsingSettings()
     {
-        $cookies = (new Cookies(new Adapter()))->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
+        $cookies = (new Cookies())->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
 
         list($this->request, $this->response) = $cookies->set($this->request, $this->response, 'non_encrypted_var', 'this value should be as is', [
             'encrypt' => false,
@@ -65,7 +64,7 @@ class EncryptionTest extends TestCase
      */
     public function testExceptionOnUnencryptedValueRanThroughEncryptor()
     {
-        $cookies = (new Cookies(new Adapter()))->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
+        $cookies = (new Cookies())->encryptor(new Encryptor('770A8A65DA156D24EE2A093277530142'));
 
         list($this->request, $this->response) = $cookies->set($this->request, $this->response, 'non_encrypted_var', 'this value should be as is', [
             'encrypt' => false,

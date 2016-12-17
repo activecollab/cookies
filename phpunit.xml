@@ -11,11 +11,18 @@
     stopOnSkipped="false"
     syntaxCheck="false"
     processIsolation="false"
-    colors="true"
->
+    colors="true">
     <testsuites>
         <testsuite name="Cookies">
             <directory>./test/src</directory>
         </testsuite>
     </testsuites>
+    <logging>
+        <log type="coverage-clover" target="./test/log/clover.xml"/>
+    </logging>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory>./src</directory>
+        </whitelist>
+    </filter>
 </phpunit>

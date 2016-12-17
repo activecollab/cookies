@@ -8,7 +8,6 @@
 
 namespace ActiveCollab\Cookies\Test;
 
-use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Test\TestCase\TestCase;
@@ -30,7 +29,7 @@ class ConfigureFromUrlTest extends TestCase
     {
         parent::setUp();
 
-        $this->cookies = new Cookies(new Adapter());
+        $this->cookies = new Cookies();
     }
 
     /**
