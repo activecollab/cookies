@@ -6,6 +6,8 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies\Test\TestCase;
 
 use Pimple\Container;
@@ -17,11 +19,9 @@ use Slim\Http\Headers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Http\Uri;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-/**
- * @package ActiveCollab\JobsQueue\Test
- */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends BaseTestCase
 {
     /**
      * @var Container
