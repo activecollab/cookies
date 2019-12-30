@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1bcca68fd551677d2d58ff71e6ca0f4",
+    "content-hash": "f3edf05c29cb17bdfac34b3e6e8c9930",
     "packages": [
         {
             "name": "activecollab/utils",
@@ -3241,7 +3241,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1",
+        "php": ">=7.3",
         "ext-openssl": "*"
     },
     "platform-dev": []
