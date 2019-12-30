@@ -45,18 +45,17 @@ class Cookies implements CookiesInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function exists(ServerRequestInterface $request, $name)
+    public function exists(ServerRequestInterface $request, string $name): bool
     {
         return $this->adapter->exists($request, $this->getPrefixedName($name));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function get(ServerRequestInterface $request, $name, $default = null, array $settings = [])
+    public function get(
+        ServerRequestInterface $request,
+        string $name,
+        $default = null,
+        array $settings = []
+    )
     {
         if ($this->exists($request, $name)) {
             $value = $this->adapter->get($request, $this->getPrefixedName($name), $default);

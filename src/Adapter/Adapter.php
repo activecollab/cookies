@@ -6,6 +6,8 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies\Adapter;
 
 use Dflydev\FigCookies\Cookie;
@@ -15,15 +17,9 @@ use Dflydev\FigCookies\SetCookies;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * @package ActiveCollab\Cookies\Adapter
- */
 class Adapter implements AdapterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function exists(ServerRequestInterface $request, $name)
+    public function exists(ServerRequestInterface $request, string $name): bool
     {
         return Cookies::fromRequest($request)->has($name);
     }
@@ -31,7 +27,12 @@ class Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function get(ServerRequestInterface $request, $name, $default = null, array $settings = [])
+    public function get(
+        ServerRequestInterface $request,
+        string $name,
+        $default = null,
+        array $settings = []
+    )
     {
         $cookies = Cookies::fromRequest($request);
 
@@ -45,7 +46,13 @@ class Adapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = [])
+    public function set(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $name,
+        $value,
+        array $settings = []
+    )
     {
         // ---------------------------------------------------
         //  Request cookies
@@ -89,13 +96,17 @@ class Adapter implements AdapterInterface
 
         $response = $set_cookies->with($set_cookie)->renderIntoSetCookieHeader($response);
 
-        return [$request, $response];
+        return [
+            $request,
+            $response
+        ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function remove(ServerRequestInterface $request, ResponseInterface $response, $name)
+    public function remove(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $name
+    )
     {
         list($request, $response) = $this->set($request, $response, $name, '', ['ttl' => -172800]);
 

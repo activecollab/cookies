@@ -25,7 +25,7 @@ interface AdapterInterface
      * @param  string                 $name
      * @return bool
      */
-    public function exists(ServerRequestInterface $request, $name);
+    public function exists(ServerRequestInterface $request, string $name): bool;
 
     /**
      * Return a cookie value. If cookie is not found, $default is returned.
@@ -40,7 +40,12 @@ interface AdapterInterface
      * @param  array                  $settings
      * @return mixed
      */
-    public function get(ServerRequestInterface $request, $name, $default = null, array $settings = []);
+    public function get(
+        ServerRequestInterface $request,
+        string $name,
+        $default = null,
+        array $settings = []
+    );
 
     /**
      * Set or modify a cookie value.
@@ -60,7 +65,13 @@ interface AdapterInterface
      * @param  array                  $settings
      * @return array
      */
-    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = []);
+    public function set(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $name,
+        $value,
+        array $settings = []
+    );
 
     /**
      * @param  ServerRequestInterface $request
@@ -68,5 +79,9 @@ interface AdapterInterface
      * @param  string                 $name
      * @return array
      */
-    public function remove(ServerRequestInterface $request, ResponseInterface $response, $name);
+    public function remove(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $name
+    );
 }
