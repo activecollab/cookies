@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
+use ActiveCollab\Encryptor\EncryptorInterface;
 
 interface CookiesInterface extends AdapterInterface
 {
@@ -28,6 +29,9 @@ interface CookiesInterface extends AdapterInterface
 
     public function getPrefix(): string;
     public function prefix(string $prefix): CookiesInterface;
+
+    public function getEncryptor(): ?EncryptorInterface;
+    public function encryptor(EncryptorInterface $encryptor = null): CookiesInterface;
 
     public function configureFromUrl(string $url): CookiesInterface;
 }

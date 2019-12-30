@@ -20,24 +20,19 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Cookies implements CookiesInterface
 {
-    /**
-     * @var AdapterInterface
-     */
     private $adapter;
-
-    /**
-     * @var CurrentTimestamp
-     */
     private $current_timestamp;
+    private $encryptor;
 
-    /**
-     * @param AdapterInterface|null          $adapter
-     * @param CurrentTimestampInterface|null $current_timestamp
-     */
-    public function __construct(AdapterInterface $adapter = null, CurrentTimestampInterface $current_timestamp = null)
+    public function __construct(
+        AdapterInterface $adapter = null,
+        CurrentTimestampInterface $current_timestamp = null,
+        EncryptorInterface $encryptor = null
+    )
     {
         $this->adapter = $adapter ? $adapter : new Adapter();
         $this->current_timestamp = $current_timestamp;
+        $this->encryptor = $encryptor;
 
         if (empty($this->current_timestamp)) {
             $this->current_timestamp = new CurrentTimestamp();
@@ -156,9 +151,6 @@ class Cookies implements CookiesInterface
         return $this;
     }
 
-    /**
-     * @var string
-     */
     private $path = '/';
 
     public function getPath(): string
@@ -201,6 +193,18 @@ class Cookies implements CookiesInterface
         return $this;
     }
 
+    public function getEncryptor(): ?EncryptorInterface
+    {
+        return $this->encryptor;
+    }
+
+    public function encryptor(EncryptorInterface $encryptor = null): CookiesInterface
+    {
+        $this->encryptor = $encryptor;
+
+        return $this;
+    }
+
     public function configureFromUrl(string $url): CookiesInterface
     {
         $parts = parse_url($url);
@@ -222,29 +226,6 @@ class Cookies implements CookiesInterface
         if (empty($this->getPrefix())) {
             $this->prefix(md5($url));
         }
-
-        return $this;
-    }
-
-    /**
-     * @var EncryptorInterface|null
-     */
-    private $encryptor;
-
-    /**
-     * @return EncryptorInterface|null
-     */
-    public function getEncryptor()
-    {
-        return $this->encryptor;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function encryptor(EncryptorInterface $encryptor = null)
-    {
-        $this->encryptor = $encryptor;
 
         return $this;
     }
