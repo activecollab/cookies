@@ -6,13 +6,18 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
+use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
+
 $header = <<<EOF
 This file is part of the Active Collab Cookies project.
 
 (c) A51 doo <info@activecollab.com>. All rights reserved.
 EOF;
 
-return (new PhpCsFixer\Config('psr2'))->setRules(
+return (new Config('psr2'))->setRules(
     [
         'header_comment' => [
             'header' => $header,
@@ -67,7 +72,7 @@ return (new PhpCsFixer\Config('psr2'))->setRules(
         'lowercase_cast' => true,
         'lowercase_keywords' => true,
     ]
-)->setFinder((new PhpCsFixer\Finder())->in(
+)->setFinder((new Finder())->in(
     [
         __DIR__ . '/src',
         __DIR__ . '/test',

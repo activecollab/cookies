@@ -21,21 +21,21 @@ use Psr\Http\Message\ServerRequestInterface;
 class Cookies implements CookiesInterface
 {
     private $adapter;
-    private $current_timestamp;
+    private $currentTimestamp;
     private $encryptor;
 
     public function __construct(
         AdapterInterface $adapter = null,
-        CurrentTimestampInterface $current_timestamp = null,
+        CurrentTimestampInterface $currentTimestamp = null,
         EncryptorInterface $encryptor = null
     )
     {
         $this->adapter = $adapter ? $adapter : new Adapter();
-        $this->current_timestamp = $current_timestamp;
+        $this->currentTimestamp = $currentTimestamp;
         $this->encryptor = $encryptor;
 
-        if (empty($this->current_timestamp)) {
-            $this->current_timestamp = new CurrentTimestamp();
+        if (empty($this->currentTimestamp)) {
+            $this->currentTimestamp = new CurrentTimestamp();
         }
     }
 
@@ -92,7 +92,7 @@ class Cookies implements CookiesInterface
             $value = $this->encryptor->encrypt($value);
         }
 
-        $settings['expires'] = $this->current_timestamp->getCurrentTimestamp() + $settings['ttl'];
+        $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
 
         return $this->adapter->set($request, $response, $this->getPrefixedName($name), $value, $settings);
     }
@@ -101,7 +101,7 @@ class Cookies implements CookiesInterface
     {
         return $this->adapter->remove($request, $response, $this->getPrefixedName($name));
     }
-    
+
     private function getPrefixedName($name)
     {
         return $this->getPrefix() . $name;
@@ -111,16 +111,16 @@ class Cookies implements CookiesInterface
     //  Configuration
     // ---------------------------------------------------
 
-    private $default_ttl = 1209600;
+    private $defaultTtl = 1209600;
 
     public function getDefaultTtl(): int
     {
-        return $this->default_ttl;
+        return $this->defaultTtl;
     }
 
     public function defaultTtl(int $value): CookiesInterface
     {
-        $this->default_ttl = $value;
+        $this->defaultTtl = $value;
 
         return $this;
     }

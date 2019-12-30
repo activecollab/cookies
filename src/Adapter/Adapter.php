@@ -102,7 +102,10 @@ class Adapter implements AdapterInterface
         string $name
     )
     {
-        list($request, $response) = $this->set($request, $response, $name, '', ['ttl' => -172800]);
+        [
+            $request,
+            $response,
+        ] = $this->set($request, $response, $name, '', ['ttl' => -172800]);
 
         $request = Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request);
 
