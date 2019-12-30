@@ -98,7 +98,7 @@ class Adapter implements AdapterInterface
 
         return [
             $request,
-            $response
+            $response,
         ];
     }
 
