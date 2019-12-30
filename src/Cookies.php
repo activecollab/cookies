@@ -66,9 +66,6 @@ class Cookies implements CookiesInterface
         return $default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function set(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -100,17 +97,11 @@ class Cookies implements CookiesInterface
         return $this->adapter->set($request, $response, $this->getPrefixedName($name), $value, $settings);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name)
     {
         return $this->adapter->remove($request, $response, $this->getPrefixedName($name));
     }
-
-    /**
-     * {@inheritdoc}
-     */
+    
     private function getPrefixedName($name)
     {
         return $this->getPrefix() . $name;

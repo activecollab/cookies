@@ -6,16 +6,13 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies\Adapter;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * Interface AdapterInterface.
- *
- * @package ActiveCollab\Cookies
- */
 interface AdapterInterface
 {
     /**

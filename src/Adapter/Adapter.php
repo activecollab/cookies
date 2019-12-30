@@ -24,9 +24,6 @@ class Adapter implements AdapterInterface
         return Cookies::fromRequest($request)->has($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get(
         ServerRequestInterface $request,
         string $name,
@@ -43,9 +40,6 @@ class Adapter implements AdapterInterface
         return $default;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function set(
         ServerRequestInterface $request,
         ResponseInterface $response,
