@@ -6,91 +6,28 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
 
-/**
- * @package ActiveCollab\Cookies
- */
 interface CookiesInterface extends AdapterInterface
 {
-    /**
-     * @return int
-     */
-    public function getDefaultTtl();
+    public function getDefaultTtl(): int;
+    public function defaultTtl(int $value): CookiesInterface;
 
-    /**
-     * Set default cookie TTL (time to live).
-     *
-     * @param  int   $value
-     * @return $this
-     */
-    public function defaultTtl($value);
+    public function getDomain(): string;
+    public function domain(string $domain): CookiesInterface;
 
-    /**
-     * Return cookie domain.
-     *
-     * @return string
-     */
-    public function getDomain();
+    public function getPath(): string;
+    public function path(string $path): CookiesInterface;
 
-    /**
-     * Set cookie domain.
-     *
-     * @param  string $domain
-     * @return $this
-     */
-    public function domain($domain);
+    public function getSecure(): bool;
+    public function secure(bool $secure): CookiesInterface;
 
-    /**
-     * @return $this
-     */
-    public function getPath();
+    public function getPrefix(): string;
+    public function prefix(string $prefix): CookiesInterface;
 
-    /**
-     * Set cookie path.
-     *
-     * @param  string $path
-     * @return $this
-     */
-    public function path($path);
-
-    /**
-     * Return true if cookie should be transfmitted only via secure connection.
-     *
-     * @return bool
-     */
-    public function getSecure();
-
-    /**
-     * Set whether cookies should be transmitted only via secure connection.
-     *
-     * @param  bool  $secure
-     * @return $this
-     */
-    public function secure($secure);
-
-    /**
-     * Return variable name prefix.
-     *
-     * @return string
-     */
-    public function getPrefix();
-
-    /**
-     * Set variable name prefix.
-     *
-     * @param  string $prefix
-     * @return $this
-     */
-    public function prefix($prefix);
-
-    /**
-     * Configure cookie domain, secure flag and domain from URL.
-     *
-     * @param  string $url
-     * @return $this
-     */
-    public function configureFromUrl($url);
+    public function configureFromUrl(string $url): CookiesInterface;
 }

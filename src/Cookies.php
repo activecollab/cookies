@@ -6,6 +6,8 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\Adapter;
@@ -16,9 +18,6 @@ use ActiveCollab\Encryptor\EncryptorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-/**
- * @package ActiveCollab\Cookies
- */
 class Cookies implements CookiesInterface
 {
     /**
@@ -75,7 +74,13 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function set(ServerRequestInterface $request, ResponseInterface $response, $name, $value, array $settings = [])
+    public function set(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $name,
+        $value,
+        array $settings = []
+    )
     {
         $settings['domain'] = $this->getDomain();
         $settings['path'] = $this->getPath();
@@ -103,7 +108,7 @@ class Cookies implements CookiesInterface
     /**
      * {@inheritdoc}
      */
-    public function remove(ServerRequestInterface $request, ResponseInterface $response, $name)
+    public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name)
     {
         return $this->adapter->remove($request, $response, $this->getPrefixedName($name));
     }
@@ -120,28 +125,14 @@ class Cookies implements CookiesInterface
     //  Configuration
     // ---------------------------------------------------
 
-    /**
-     * Default TTL (14 days).
-     *
-     * @var int
-     */
     private $default_ttl = 1209600;
 
-    /**
-     * @return int
-     */
-    public function getDefaultTtl()
+    public function getDefaultTtl(): int
     {
         return $this->default_ttl;
     }
 
-    /**
-     * Set default cookie TTL (time to live).
-     *
-     * @param  int   $value
-     * @return $this
-     */
-    public function defaultTtl($value)
+    public function defaultTtl(int $value): CookiesInterface
     {
         $this->default_ttl = $value;
 
@@ -151,20 +142,14 @@ class Cookies implements CookiesInterface
     /**
      * @var string
      */
-    private $domain;
+    private $domain = '';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->domain;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function domain($domain)
+    public function domain(string $domain): CookiesInterface
     {
         $this->domain = $domain;
 
@@ -176,74 +161,47 @@ class Cookies implements CookiesInterface
      */
     private $path = '/';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function path($path)
+    public function path(string $path): CookiesInterface
     {
         $this->path = $path;
 
         return $this;
     }
 
-    /**
-     * @var bool
-     */
     private $secure = true;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSecure()
+    public function getSecure(): bool
     {
         return $this->secure;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function secure($secure)
+    public function secure(bool $secure): CookiesInterface
     {
         $this->secure = (bool) $secure;
 
         return $this;
     }
 
-    /**
-     * @var string
-     */
-    private $prefix;
+    private $prefix = '';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function prefix($prefix)
+    public function prefix(string $prefix): CookiesInterface
     {
         $this->prefix = $prefix;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureFromUrl($url)
+    public function configureFromUrl(string $url): CookiesInterface
     {
         $parts = parse_url($url);
 
