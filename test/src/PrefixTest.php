@@ -30,10 +30,12 @@ class PrefixTest extends TestCase
     {
         parent::setUp();
 
-        $this->setCookies([
-            'other_websites_cookie' => 123,
-            'prefix_test_our_cookie' => 987,
-        ]);
+        $this->setCookies(
+            [
+                'other_websites_cookie' => 123,
+                'prefix_test_our_cookie' => 987,
+            ]
+        );
 
         $this->cookies = (new Cookies())->prefix('prefix_test_');
     }

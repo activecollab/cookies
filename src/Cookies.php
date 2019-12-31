@@ -89,7 +89,11 @@ class Cookies implements CookiesInterface
         array $settings = []
     )
     {
-        $cookieSetter = $this->createSetter($name, $value, $settings);
+        $cookieSetter = $this->createSetter(
+            $this->getPrefixedName($name),
+            $value,
+            $settings
+        );
 
         return [
             $cookieSetter->applyToRequest($request),
