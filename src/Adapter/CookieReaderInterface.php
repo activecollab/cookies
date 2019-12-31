@@ -10,10 +10,10 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Adapter;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-interface AdapterInterface
+interface CookieReaderInterface
 {
-
+    public function exists(ServerRequestInterface $request): bool;
+    public function get(ServerRequestInterface $request, $default = null);
 }

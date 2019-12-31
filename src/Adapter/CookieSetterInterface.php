@@ -10,11 +10,6 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Adapter;
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
-
-interface CookieSetterInterface
+interface CookieSetterInterface extends CookieManipulatorInterface
 {
-    public function applyToRequest(RequestInterface $request): RequestInterface;
-    public function applyToResponse(ResponseInterface $response): ResponseInterface;
 }

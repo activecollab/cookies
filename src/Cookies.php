@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies;
 
-use ActiveCollab\Cookies\Adapter\Adapter;
-use ActiveCollab\Cookies\Adapter\AdapterInterface;
+use ActiveCollab\Cookies\Adapter\CookieReader;
+use ActiveCollab\Cookies\Adapter\CookieReaderInterface;
 use ActiveCollab\Cookies\Adapter\CookieRemover;
 use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
 use ActiveCollab\Cookies\Adapter\CookieSetter;
@@ -23,17 +23,14 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Cookies implements CookiesInterface
 {
-    private $adapter;
     private $currentTimestamp;
     private $encryptor;
 
     public function __construct(
-        AdapterInterface $adapter = null,
         CurrentTimestampInterface $currentTimestamp = null,
         EncryptorInterface $encryptor = null
     )
     {
-        $this->adapter = $adapter ? $adapter : new Adapter();
         $this->currentTimestamp = $currentTimestamp;
         $this->encryptor = $encryptor;
 
@@ -42,9 +39,14 @@ class Cookies implements CookiesInterface
         }
     }
 
+    public function createReader(string $name): CookieReaderInterface
+    {
+        return new CookieReader($this->getPrefixedName($name));
+    }
+
     public function exists(ServerRequestInterface $request, string $name): bool
     {
-        return $this->adapter->exists($request, $this->getPrefixedName($name));
+        return $this->createReader($name)->exists($request);
     }
 
     public function get(
@@ -54,8 +56,10 @@ class Cookies implements CookiesInterface
         array $settings = []
     )
     {
-        if ($this->exists($request, $name)) {
-            $value = $this->adapter->get($request, $this->getPrefixedName($name), $default);
+        $cookieReader = $this->createReader($name);
+
+        if ($cookieReader->exists($request)) {
+            $value = $cookieReader->get($request, $default);
 
             $decrypt = array_key_exists('decrypt', $settings) ? (bool) $settings['decrypt'] : true;
 
@@ -80,7 +84,7 @@ class Cookies implements CookiesInterface
             $value = $this->encryptor->encrypt($value);
         }
 
-        return new CookieSetter($name, $value, $this->prepareSettings($settings));
+        return new CookieSetter($this->getPrefixedName($name), $value, $this->prepareSettings($settings));
     }
 
     public function set(
@@ -92,7 +96,7 @@ class Cookies implements CookiesInterface
     )
     {
         $cookieSetter = $this->createSetter(
-            $this->getPrefixedName($name),
+            $name,
             $value,
             $settings
         );
@@ -124,12 +128,12 @@ class Cookies implements CookiesInterface
 
     public function createRemover(string $name): CookieRemoverInterface
     {
-        return new CookieRemover($name);
+        return new CookieRemover($this->getPrefixedName($name));
     }
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name)
     {
-        $cookieReemover = $this->createRemover($this->getPrefixedName($name));
+        $cookieReemover = $this->createRemover($name);
 
         return [
             $cookieReemover->applyToRequest($request),

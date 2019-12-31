@@ -10,6 +10,6 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Adapter;
 
-interface CookieRemoverInterface extends CookieSetterInterface
+interface CookieRemoverInterface extends CookieManipulatorInterface
 {
 }
