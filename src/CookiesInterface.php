@@ -10,10 +10,43 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies;
 
+use ActiveCollab\Cookies\Adapter\CookieGetterInterface;
+use ActiveCollab\Cookies\Adapter\CookieRemover;
+use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
+use ActiveCollab\Cookies\Adapter\CookieSetter;
 use ActiveCollab\Encryptor\EncryptorInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface CookiesInterface
 {
+    public function creteGetter(string $name): CookieGetterInterface;
+
+    public function exists(ServerRequestInterface $request, string $name): bool;
+    public function get(
+        ServerRequestInterface $request,
+        string $name,
+        $default = null,
+        array $settings = []
+    );
+
+    public function createSetter(
+        string $name,
+        $value,
+        array $settings = []
+    );
+
+    public function set(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        string $name,
+        $value,
+        array $settings = []
+    ): array;
+
+    public function createRemover(string $name): CookieRemoverInterface;
+    public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name): array;
+
     public function getDefaultTtl(): int;
     public function defaultTtl(int $value): CookiesInterface;
 
