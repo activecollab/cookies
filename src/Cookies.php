@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies;
 
-use ActiveCollab\Cookies\Adapter\CookieReader;
-use ActiveCollab\Cookies\Adapter\CookieReaderInterface;
+use ActiveCollab\Cookies\Adapter\CookieGetter;
+use ActiveCollab\Cookies\Adapter\CookieGetterInterface;
 use ActiveCollab\Cookies\Adapter\CookieRemover;
 use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
 use ActiveCollab\Cookies\Adapter\CookieSetter;
@@ -39,9 +39,9 @@ class Cookies implements CookiesInterface
         }
     }
 
-    public function createReader(string $name): CookieReaderInterface
+    public function createReader(string $name): CookieGetterInterface
     {
-        return new CookieReader($this->getPrefixedName($name));
+        return new CookieGetter($this->getPrefixedName($name));
     }
 
     public function exists(ServerRequestInterface $request, string $name): bool

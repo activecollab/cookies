@@ -10,10 +10,9 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies;
 
-use ActiveCollab\Cookies\Adapter\AdapterInterface;
 use ActiveCollab\Encryptor\EncryptorInterface;
 
-interface CookiesInterface extends AdapterInterface
+interface CookiesInterface
 {
     public function getDefaultTtl(): int;
     public function defaultTtl(int $value): CookiesInterface;

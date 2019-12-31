@@ -12,7 +12,7 @@ namespace ActiveCollab\Cookies\Adapter;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-interface CookieReaderInterface
+interface CookieGetterInterface
 {
     public function exists(ServerRequestInterface $request): bool;
     public function get(ServerRequestInterface $request, $default = null);

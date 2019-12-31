@@ -13,7 +13,7 @@ namespace ActiveCollab\Cookies\Adapter;
 use Dflydev\FigCookies\Cookies;
 use Psr\Http\Message\ServerRequestInterface;
 
-class CookieReader implements CookieReaderInterface
+class CookieGetter implements CookieGetterInterface
 {
     private $name;
 
