@@ -15,6 +15,7 @@ use ActiveCollab\Cookies\Adapter\CookieGetterInterface;
 use ActiveCollab\Cookies\Adapter\CookieRemover;
 use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
 use ActiveCollab\Cookies\Adapter\CookieSetter;
+use ActiveCollab\Cookies\Adapter\CookieSetterInterface;
 use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use ActiveCollab\Encryptor\EncryptorInterface;
@@ -75,7 +76,7 @@ class Cookies implements CookiesInterface
         string $name,
         $value,
         array $settings = []
-    )
+    ): CookieSetterInterface
     {
         $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;
 

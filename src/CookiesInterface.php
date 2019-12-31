@@ -12,6 +12,7 @@ namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\CookieGetterInterface;
 use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
+use ActiveCollab\Cookies\Adapter\CookieSetterInterface;
 use ActiveCollab\Encryptor\EncryptorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,7 +33,7 @@ interface CookiesInterface
         string $name,
         $value,
         array $settings = []
-    );
+    ): CookieSetterInterface;
 
     public function set(
         ServerRequestInterface $request,
