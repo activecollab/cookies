@@ -72,7 +72,7 @@ class Cookies implements CookiesInterface
         $value,
         array $settings = [])
     {
-        $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;;
+        $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;
 
         if ($encrypt && $this->encryptor) {
             $value = $this->encryptor->encrypt($value);
