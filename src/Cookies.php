@@ -12,6 +12,8 @@ namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
+use ActiveCollab\Cookies\Adapter\CookieRemover;
+use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
 use ActiveCollab\Cookies\Adapter\CookieSetter;
 use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
@@ -120,9 +122,19 @@ class Cookies implements CookiesInterface
         return $settings;
     }
 
+    public function createRemover(string $name): CookieRemoverInterface
+    {
+        return new CookieRemover($name);
+    }
+
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name)
     {
-        return $this->adapter->remove($request, $response, $this->getPrefixedName($name));
+        $cookieReemover = $this->createRemover($this->getPrefixedName($name));
+
+        return [
+            $cookieReemover->applyToRequest($request),
+            $cookieReemover->applyToResponse($response),
+        ];
     }
 
     private function getPrefixedName($name)
