@@ -11,9 +11,7 @@ declare(strict_types=1);
 namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\CookieGetterInterface;
-use ActiveCollab\Cookies\Adapter\CookieRemover;
 use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
-use ActiveCollab\Cookies\Adapter\CookieSetter;
 use ActiveCollab\Encryptor\EncryptorInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -27,7 +25,7 @@ interface CookiesInterface
         ServerRequestInterface $request,
         string $name,
         $default = null,
-        array $settings = []
+        bool $decrypt = true
     );
 
     public function createSetter(

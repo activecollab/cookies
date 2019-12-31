@@ -53,15 +53,13 @@ class Cookies implements CookiesInterface
         ServerRequestInterface $request,
         string $name,
         $default = null,
-        array $settings = []
+        bool $decrypt = true
     )
     {
         $cookieReader = $this->creteGetter($name);
 
         if ($cookieReader->exists($request)) {
             $value = $cookieReader->get($request, $default);
-
-            $decrypt = array_key_exists('decrypt', $settings) ? (bool) $settings['decrypt'] : true;
 
             if ($decrypt && $this->encryptor) {
                 $value = $this->encryptor->decrypt($value);
