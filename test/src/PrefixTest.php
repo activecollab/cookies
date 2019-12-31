@@ -6,6 +6,8 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies\Test;
 
 use ActiveCollab\Cookies\Cookies;
@@ -14,9 +16,6 @@ use ActiveCollab\Cookies\Test\TestCase\TestCase;
 use Dflydev\FigCookies\Cookie as FigCookie;
 use Dflydev\FigCookies\Cookies as FigCookies;
 
-/**
- * @package ActiveCollab\Cookies\Test
- */
 class PrefixTest extends TestCase
 {
     /**
@@ -63,7 +62,10 @@ class PrefixTest extends TestCase
     public function testSet()
     {
         $this->assertFalse($this->cookies->exists($this->request, 'new_cookie'));
-        list($this->request, $this->response) = $this->cookies->set($this->request, $this->response, 'new_cookie', 'new_cookie_value');
+        [
+            $this->request,
+            $this->response,
+        ] = $this->cookies->set($this->request, $this->response, 'new_cookie', 'new_cookie_value');
 
         $this->assertTrue($this->cookies->exists($this->request, 'new_cookie'));
         $this->assertSame('new_cookie_value', $this->cookies->get($this->request, 'new_cookie'));
@@ -75,7 +77,10 @@ class PrefixTest extends TestCase
     public function testRemove()
     {
         $this->assertTrue($this->cookies->exists($this->request, 'our_cookie'));
-        list($this->request, $this->response) = $this->cookies->remove($this->request, $this->response, 'our_cookie');
+        [
+            $this->request,
+            $this->response,
+        ] = $this->cookies->remove($this->request, $this->response, 'our_cookie');
 
         $this->assertFalse($this->cookies->exists($this->request, 'our_cookie'));
     }

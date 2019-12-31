@@ -12,6 +12,7 @@ namespace ActiveCollab\Cookies;
 
 use ActiveCollab\Cookies\Adapter\Adapter;
 use ActiveCollab\Cookies\Adapter\AdapterInterface;
+use ActiveCollab\Cookies\Adapter\CookieSetter;
 use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use ActiveCollab\Encryptor\EncryptorInterface;
@@ -66,6 +67,20 @@ class Cookies implements CookiesInterface
         return $default;
     }
 
+    public function createSetter(
+        string $name,
+        $value,
+        array $settings = [])
+    {
+        $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;;
+
+        if ($encrypt && $this->encryptor) {
+            $value = $this->encryptor->encrypt($value);
+        }
+
+        return new CookieSetter($name, $value, $this->prepareSettings($settings));
+    }
+
     public function set(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -73,6 +88,16 @@ class Cookies implements CookiesInterface
         $value,
         array $settings = []
     )
+    {
+        $cookieSetter = $this->createSetter($name, $value, $settings);
+
+        return [
+            $cookieSetter->applyToRequest($request),
+            $cookieSetter->applyToResponse($response),
+        ];
+    }
+
+    private function prepareSettings(array $settings): array
     {
         $settings['domain'] = $this->getDomain();
         $settings['path'] = $this->getPath();
@@ -86,15 +111,9 @@ class Cookies implements CookiesInterface
             $settings['http_only'] = false;
         }
 
-        $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;
-
-        if ($encrypt && $this->encryptor) {
-            $value = $this->encryptor->encrypt($value);
-        }
-
         $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
 
-        return $this->adapter->set($request, $response, $this->getPrefixedName($name), $value, $settings);
+        return $settings;
     }
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name)

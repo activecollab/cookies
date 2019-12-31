@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Adapter;
 
-use Dflydev\FigCookies\Cookie;
 use Dflydev\FigCookies\Cookies;
-use Dflydev\FigCookies\SetCookie;
-use Dflydev\FigCookies\SetCookies;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -48,51 +45,11 @@ class Adapter implements AdapterInterface
         array $settings = []
     )
     {
-        // ---------------------------------------------------
-        //  Request cookies
-        // ---------------------------------------------------
-
-        $cookies = Cookies::fromRequest($request);
-
-        if ($cookies->has($name)) {
-            $cookie = $cookies->get($name)->withValue($value);
-        } else {
-            $cookie = Cookie::create($name, $value);
-        }
-
-        $request = $cookies->with($cookie)->renderIntoCookieHeader($request);
-
-        // ---------------------------------------------------
-        //  Response cookies
-        // ---------------------------------------------------
-
-        $domain = isset($settings['domain']) ? (string) $settings['domain'] : '';
-        $path = isset($settings['path']) ? (string) $settings['path'] : '/';
-        $ttl = isset($settings['ttl']) ? $settings['ttl'] : 0;
-        $expires = isset($settings['expires']) ? $settings['expires'] : time() + $ttl;
-        $secure = isset($settings['secure']) && $settings['secure'];
-        $http_only = isset($settings['http_only']) && $settings['http_only'];
-
-        $set_cookies = SetCookies::fromResponse($response);
-
-        if ($set_cookies->has($name)) {
-            $set_cookie = $set_cookies->get($name)->withValue($value);
-        } else {
-            $set_cookie = SetCookie::create($name, $value);
-        }
-
-        $set_cookie = $set_cookie
-            ->withDomain($domain)
-            ->withPath($path)
-            ->withSecure($secure)
-            ->withExpires(date(DATE_COOKIE, $expires))
-            ->withHttpOnly($http_only);
-
-        $response = $set_cookies->with($set_cookie)->renderIntoSetCookieHeader($response);
+        $cookieSetter = new CookieSetter($name, $value, $settings);
 
         return [
-            $request,
-            $response,
+            $cookieSetter->applyToRequest($request),
+            $cookieSetter->applyToResponse($response),
         ];
     }
 
@@ -102,6 +59,8 @@ class Adapter implements AdapterInterface
         string $name
     )
     {
+        $cookieRemover = new CookieRemover($name);
+
         [
             $request,
             $response,
@@ -109,6 +68,9 @@ class Adapter implements AdapterInterface
 
         $request = Cookies::fromRequest($request)->without($name)->renderIntoCookieHeader($request);
 
-        return [$request, $response];
+        return [
+            $cookieRemover->applyToRequest($request),
+            $cookieRemover->applyToResponse($response)
+        ];
     }
 }
