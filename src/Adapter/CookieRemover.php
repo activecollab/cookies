@@ -10,12 +10,17 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Adapter;
 
+use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use Dflydev\FigCookies\Cookies;
 use Psr\Http\Message\RequestInterface;
 
 class CookieRemover extends CookieSetter implements CookieRemoverInterface
 {
-    public function __construct(string $name, array $settings = [])
+    public function __construct(
+        string $name,
+        array $settings,
+        CurrentTimestampInterface $currentTimestamp
+    )
     {
         parent::__construct(
             $name,
@@ -25,7 +30,8 @@ class CookieRemover extends CookieSetter implements CookieRemoverInterface
                 [
                     'ttl' => -172800,
                 ]
-            )
+            ),
+            $currentTimestamp
         );
     }
 

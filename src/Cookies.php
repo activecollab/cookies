@@ -24,8 +24,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Cookies implements CookiesInterface
 {
-    private $currentTimestamp;
-    private $encryptor;
+    private ?CurrentTimestampInterface $currentTimestamp;
+    private ?EncryptorInterface $encryptor;
 
     public function __construct(
         CurrentTimestampInterface $currentTimestamp = null,
@@ -84,7 +84,12 @@ class Cookies implements CookiesInterface
             $value = $this->encryptor->encrypt($value);
         }
 
-        return new CookieSetter($this->getPrefixedName($name), $value, $this->prepareSettings($settings));
+        return new CookieSetter(
+            $this->getPrefixedName($name),
+            $value,
+            $this->prepareSettings($settings),
+            $this->currentTimestamp
+        );
     }
 
     public function set(
@@ -128,7 +133,7 @@ class Cookies implements CookiesInterface
 
     public function createRemover(string $name): CookieRemoverInterface
     {
-        return new CookieRemover($this->getPrefixedName($name));
+        return new CookieRemover($this->getPrefixedName($name), [], $this->currentTimestamp);
     }
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name): array
@@ -150,7 +155,7 @@ class Cookies implements CookiesInterface
     //  Configuration
     // ---------------------------------------------------
 
-    private $defaultTtl = 1209600;
+    private int $defaultTtl = 1209600;
 
     public function getDefaultTtl(): int
     {
@@ -164,10 +169,7 @@ class Cookies implements CookiesInterface
         return $this;
     }
 
-    /**
-     * @var string
-     */
-    private $domain = '';
+    private string $domain = '';
 
     public function getDomain(): string
     {
@@ -181,7 +183,7 @@ class Cookies implements CookiesInterface
         return $this;
     }
 
-    private $path = '/';
+    private string $path = '/';
 
     public function getPath(): string
     {
@@ -195,7 +197,7 @@ class Cookies implements CookiesInterface
         return $this;
     }
 
-    private $secure = true;
+    private bool $secure = true;
 
     public function getSecure(): bool
     {
@@ -209,7 +211,7 @@ class Cookies implements CookiesInterface
         return $this;
     }
 
-    private $prefix = '';
+    private string $prefix = '';
 
     public function getPrefix(): string
     {

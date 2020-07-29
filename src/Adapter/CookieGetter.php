@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class CookieGetter implements CookieGetterInterface
 {
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {

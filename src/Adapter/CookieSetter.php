@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Adapter;
 
+use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
+use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use Dflydev\FigCookies\Cookie;
 use Dflydev\FigCookies\Cookies;
 use Dflydev\FigCookies\SetCookie;
@@ -19,26 +21,42 @@ use Psr\Http\Message\ResponseInterface;
 
 class CookieSetter implements CookieSetterInterface
 {
-    protected $name;
-    private $value;
-    private $domain;
-    private $path;
-    private $timeToLive;
-    private $expires;
-    private $secure;
-    private $httpOnly;
+    protected string $name;
 
-    public function __construct(string $name, $value, array $settings = [])
+    /**
+     * @var mixed
+     */
+    private $value;
+
+    private CurrentTimestampInterface $currentTimestamp;
+
+    private string $domain;
+    private string $path;
+    private int $timeToLive;
+    private int $expires;
+    private bool $secure;
+    private bool $httpOnly;
+
+
+    public function __construct(
+        string $name,
+        $value,
+        array $settings,
+        CurrentTimestampInterface $currentTimestamp
+    )
     {
         $this->name = $name;
         $this->value = $value;
+        $this->currentTimestamp = $currentTimestamp ?? new CurrentTimestamp();
 
         $this->domain = isset($settings['domain']) ? (string) $settings['domain'] : '';
         $this->path = isset($settings['path']) ? (string) $settings['path'] : '/';
         $this->timeToLive = isset($settings['ttl']) ? $settings['ttl'] : 0;
-        $this->expires = isset($settings['expires']) ? $settings['expires'] : time() + $this->timeToLive;
-        $this->secure = isset($settings['secure']) && $settings['secure'];
-        $this->httpOnly = isset($settings['http_only']) && $settings['http_only'];
+        $this->expires = isset($settings['expires'])
+            ? (int) $settings['expires']
+            : $this->currentTimestamp->getCurrentTimestamp() + $this->timeToLive;
+        $this->secure = !empty($settings['secure']);
+        $this->httpOnly = !empty($settings['http_only']);
     }
 
     public function applyToRequest(RequestInterface $request): RequestInterface
