@@ -6,15 +6,14 @@
  * (c) A51 doo <info@activecollab.com>. All rights reserved.
  */
 
+declare(strict_types=1);
+
 namespace ActiveCollab\Cookies\Test;
 
 use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Test\TestCase\TestCase;
 
-/**
- * @package ActiveCollab\Cookies\Test
- */
 class ConfigureFromUrlTest extends TestCase
 {
     /**
@@ -22,10 +21,7 @@ class ConfigureFromUrlTest extends TestCase
      */
     private $cookies;
 
-    /**
-     * Set up test environment.
-     */
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

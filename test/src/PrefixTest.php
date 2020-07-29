@@ -23,10 +23,7 @@ class PrefixTest extends TestCase
      */
     private $cookies;
 
-    /**
-     * Set up test environment.
-     */
-    protected function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

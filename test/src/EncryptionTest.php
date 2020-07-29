@@ -39,8 +39,8 @@ class EncryptionTest extends TestCase
 
         $set_cookie_header = $this->response->getHeaderLine('Set-Cookie');
         $this->assertNotEmpty($set_cookie_header);
-        $this->assertContains('encrypted_var', $set_cookie_header);
-        $this->assertNotContains('value to encrypt', $set_cookie_header);
+        $this->assertStringContainsString('encrypted_var', $set_cookie_header);
+        $this->assertStringNotContainsString('value to encrypt', $set_cookie_header);
 
         $this->assertEquals('value to encrypt', $cookies->get($this->request, 'encrypted_var'));
     }
@@ -64,8 +64,8 @@ class EncryptionTest extends TestCase
 
         $set_cookie_header = $this->response->getHeaderLine('Set-Cookie');
         $this->assertNotEmpty($set_cookie_header);
-        $this->assertContains('non_encrypted_var', $set_cookie_header);
-        $this->assertContains(urlencode('this value should be as is'), $set_cookie_header);
+        $this->assertStringContainsString('non_encrypted_var', $set_cookie_header);
+        $this->assertStringContainsString(urlencode('this value should be as is'), $set_cookie_header);
 
         $this->assertSame(
             'this value should be as is',
