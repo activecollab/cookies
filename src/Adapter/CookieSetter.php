@@ -14,6 +14,7 @@ use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use Dflydev\FigCookies\Cookie;
 use Dflydev\FigCookies\Cookies;
+use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
 use Dflydev\FigCookies\SetCookies;
 use Psr\Http\Message\RequestInterface;
@@ -36,6 +37,7 @@ class CookieSetter implements CookieSetterInterface
     private int $expires;
     private bool $secure;
     private bool $httpOnly;
+    private ?SameSite $sameSite;
 
 
     public function __construct(
@@ -57,6 +59,7 @@ class CookieSetter implements CookieSetterInterface
             : $this->currentTimestamp->getCurrentTimestamp() + $this->timeToLive;
         $this->secure = !empty($settings['secure']);
         $this->httpOnly = !empty($settings['http_only']);
+        $this->sameSite = $settings['same_site'] ?? null;
     }
 
     public function applyToRequest(RequestInterface $request): RequestInterface
@@ -90,6 +93,10 @@ class CookieSetter implements CookieSetterInterface
             ->withSecure($this->secure)
             ->withExpires(date(DATE_COOKIE, $this->expires))
             ->withHttpOnly($this->httpOnly);
+
+        if ($this->sameSite !== null) {
+            $set_cookie = $set_cookie->withSameSite($this->sameSite);
+        }
 
         return $setCookies->with($set_cookie)->renderIntoSetCookieHeader($response);
     }

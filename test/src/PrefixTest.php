@@ -94,7 +94,7 @@ class PrefixTest extends TestCase
         $cookie_jar = FigCookies::fromRequest($this->request);
 
         foreach ($cookies as $k => $v) {
-            $cookie_jar = $cookie_jar->with(new FigCookie($k, $v));
+            $cookie_jar = $cookie_jar->with(FigCookie::create($k, (string) $v));
         }
 
         $this->request = $cookie_jar->renderIntoCookieHeader($this->request);
