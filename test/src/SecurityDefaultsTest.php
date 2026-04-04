@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * This file is part of the Active Collab Cookies project.
+ *
+ * (c) A51 doo <info@activecollab.com>. All rights reserved.
+ */
+
 declare(strict_types=1);
 
 namespace ActiveCollab\Cookies\Test;
@@ -8,7 +14,6 @@ use ActiveCollab\Cookies\Cookies;
 use ActiveCollab\Cookies\CookiesInterface;
 use ActiveCollab\Cookies\Test\TestCase\TestCase;
 use Dflydev\FigCookies\Modifier\SameSite;
-use Dflydev\FigCookies\SetCookies;
 
 class SecurityDefaultsTest extends TestCase
 {
@@ -231,5 +236,57 @@ class SecurityDefaultsTest extends TestCase
         // Other defaults remain
         $this->assertStringContainsString('Secure', $header);
         $this->assertStringContainsString('SameSite=Lax', $header);
+    }
+
+    // --- Per-cookie same_site override ---
+
+    public function testSameSiteCanBeOverriddenPerCookie(): void
+    {
+        $this->cookies->sameSite(SameSite::lax());
+
+        [, $response] = $this->cookies->set(
+            $this->request,
+            $this->response,
+            'csrf_token',
+            'abc',
+            ['same_site' => SameSite::strict()],
+        );
+
+        $header = $response->getHeaderLine('Set-Cookie');
+        $this->assertStringContainsString('SameSite=Strict', $header);
+        $this->assertStringNotContainsString('SameSite=Lax', $header);
+    }
+
+    public function testSameSiteOverrideDoesNotAffectGlobalDefault(): void
+    {
+        $this->cookies->sameSite(SameSite::lax());
+
+        $this->cookies->set(
+            $this->request,
+            $this->response,
+            'csrf_token',
+            'abc',
+            ['same_site' => SameSite::strict()],
+        );
+
+        $this->assertSame(
+            'SameSite=Lax',
+            $this->cookies->getSameSite()->asString(),
+        );
+    }
+
+    public function testSameSiteUsesGlobalDefaultWhenNotOverridden(): void
+    {
+        $this->cookies->sameSite(SameSite::strict());
+
+        [, $response] = $this->cookies->set(
+            $this->request,
+            $this->response,
+            'session',
+            'xyz',
+        );
+
+        $header = $response->getHeaderLine('Set-Cookie');
+        $this->assertStringContainsString('SameSite=Strict', $header);
     }
 }

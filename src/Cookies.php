@@ -116,25 +116,28 @@ class Cookies implements CookiesInterface
         ];
     }
 
-    private function prepareSettings(array $settings): array
-    {
-        $settings['domain'] = $this->getDomain();
-        $settings['path'] = $this->getPath();
-        $settings['secure'] = $this->getSecure();
-        $settings['same_site'] = $this->getSameSite();
+private function prepareSettings(array $settings): array
+{
+    $settings['domain'] = $this->getDomain();
+    $settings['path'] = $this->getPath();
+    $settings['secure'] = $this->getSecure();
 
-        if (empty($settings['ttl'])) {
-            $settings['ttl'] = $this->getDefaultTtl();
-        }
-
-        if (!array_key_exists('http_only', $settings)) {
-            $settings['http_only'] = $this->getHttpOnly();
-        }
-
-        $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
-
-        return $settings;
+    if (empty($settings['ttl'])) {
+        $settings['ttl'] = $this->getDefaultTtl();
     }
+
+    if (!array_key_exists('http_only', $settings)) {
+        $settings['http_only'] = $this->getHttpOnly();
+    }
+
+    if (!array_key_exists('same_site', $settings)) {
+        $settings['same_site'] = $this->getSameSite();
+    }
+
+    $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
+
+    return $settings;
+}
 
     public function createRemover(string $name): CookieRemoverInterface
     {
@@ -147,11 +150,11 @@ class Cookies implements CookiesInterface
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name): array
     {
-        $cookieReemover = $this->createRemover($name);
+        $cookieRemover = $this->createRemover($name);
 
         return [
-            $cookieReemover->applyToRequest($request),
-            $cookieReemover->applyToResponse($response),
+            $cookieRemover->applyToRequest($request),
+            $cookieRemover->applyToResponse($response),
         ];
     }
 
@@ -216,7 +219,7 @@ class Cookies implements CookiesInterface
 
     public function secure(bool $secure): CookiesInterface
     {
-        $this->secure = (bool) $secure;
+        $this->secure = $secure;
 
         return $this;
     }
