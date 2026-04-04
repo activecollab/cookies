@@ -14,25 +14,26 @@ use ActiveCollab\Cookies\Adapter\CookieGetterInterface;
 use ActiveCollab\Cookies\Adapter\CookieRemoverInterface;
 use ActiveCollab\Cookies\Adapter\CookieSetterInterface;
 use ActiveCollab\Encryptor\EncryptorInterface;
+use Dflydev\FigCookies\Modifier\SameSite;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface CookiesInterface
 {
-    public function creteGetter(string $name): CookieGetterInterface;
+    public function createGetter(string $name): CookieGetterInterface;
 
     public function exists(ServerRequestInterface $request, string $name): bool;
     public function get(
         ServerRequestInterface $request,
         string $name,
         $default = null,
-        bool $decrypt = true
-    );
+        bool $decrypt = true,
+    ): mixed;
 
     public function createSetter(
         string $name,
         $value,
-        array $settings = []
+        array $settings = [],
     ): CookieSetterInterface;
 
     public function set(
@@ -40,7 +41,7 @@ interface CookiesInterface
         ResponseInterface $response,
         string $name,
         $value,
-        array $settings = []
+        array $settings = [],
     ): array;
 
     public function createRemover(string $name): CookieRemoverInterface;
@@ -57,6 +58,12 @@ interface CookiesInterface
 
     public function getSecure(): bool;
     public function secure(bool $secure): CookiesInterface;
+
+    public function getHttpOnly(): bool;
+    public function httpOnly(bool $httpOnly): CookiesInterface;
+
+    public function getSameSite(): SameSite;
+    public function sameSite(SameSite $sameSite): CookiesInterface;
 
     public function getPrefix(): string;
     public function prefix(string $prefix): CookiesInterface;

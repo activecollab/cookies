@@ -19,6 +19,7 @@ use ActiveCollab\Cookies\Adapter\CookieSetterInterface;
 use ActiveCollab\CurrentTimestamp\CurrentTimestamp;
 use ActiveCollab\CurrentTimestamp\CurrentTimestampInterface;
 use ActiveCollab\Encryptor\EncryptorInterface;
+use Dflydev\FigCookies\Modifier\SameSite;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -26,6 +27,7 @@ class Cookies implements CookiesInterface
 {
     private ?CurrentTimestampInterface $currentTimestamp;
     private ?EncryptorInterface $encryptor;
+    private SameSite $sameSite;
 
     public function __construct(
         CurrentTimestampInterface $currentTimestamp = null,
@@ -38,26 +40,28 @@ class Cookies implements CookiesInterface
         if (empty($this->currentTimestamp)) {
             $this->currentTimestamp = new CurrentTimestamp();
         }
+
+        $this->sameSite = SameSite::lax();
     }
 
-    public function creteGetter(string $name): CookieGetterInterface
+    public function createGetter(string $name): CookieGetterInterface
     {
         return new CookieGetter($this->getPrefixedName($name));
     }
 
     public function exists(ServerRequestInterface $request, string $name): bool
     {
-        return $this->creteGetter($name)->exists($request);
+        return $this->createGetter($name)->exists($request);
     }
 
     public function get(
         ServerRequestInterface $request,
         string $name,
         $default = null,
-        bool $decrypt = true
-    )
+        bool $decrypt = true,
+    ): mixed
     {
-        $cookieReader = $this->creteGetter($name);
+        $cookieReader = $this->createGetter($name);
 
         if ($cookieReader->exists($request)) {
             $value = $cookieReader->get($request, $default);
@@ -75,7 +79,7 @@ class Cookies implements CookiesInterface
     public function createSetter(
         string $name,
         $value,
-        array $settings = []
+        array $settings = [],
     ): CookieSetterInterface
     {
         $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;
@@ -97,13 +101,13 @@ class Cookies implements CookiesInterface
         ResponseInterface $response,
         string $name,
         $value,
-        array $settings = []
+        array $settings = [],
     ): array
     {
         $cookieSetter = $this->createSetter(
             $name,
             $value,
-            $settings
+            $settings,
         );
 
         return [
@@ -112,37 +116,45 @@ class Cookies implements CookiesInterface
         ];
     }
 
-    private function prepareSettings(array $settings): array
-    {
-        $settings['domain'] = $this->getDomain();
-        $settings['path'] = $this->getPath();
-        $settings['secure'] = $this->getSecure();
+private function prepareSettings(array $settings): array
+{
+    $settings['domain'] = $this->getDomain();
+    $settings['path'] = $this->getPath();
+    $settings['secure'] = $this->getSecure();
 
-        if (empty($settings['ttl'])) {
-            $settings['ttl'] = $this->getDefaultTtl();
-        }
-
-        if (empty($settings['http_only'])) {
-            $settings['http_only'] = false;
-        }
-
-        $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
-
-        return $settings;
+    if (empty($settings['ttl'])) {
+        $settings['ttl'] = $this->getDefaultTtl();
     }
+
+    if (!array_key_exists('http_only', $settings)) {
+        $settings['http_only'] = $this->getHttpOnly();
+    }
+
+    if (!array_key_exists('same_site', $settings)) {
+        $settings['same_site'] = $this->getSameSite();
+    }
+
+    $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
+
+    return $settings;
+}
 
     public function createRemover(string $name): CookieRemoverInterface
     {
-        return new CookieRemover($this->getPrefixedName($name), [], $this->currentTimestamp);
+        return new CookieRemover(
+            $this->getPrefixedName($name),
+            $this->prepareSettings([]),
+            $this->currentTimestamp,
+        );
     }
 
     public function remove(ServerRequestInterface $request, ResponseInterface $response, string $name): array
     {
-        $cookieReemover = $this->createRemover($name);
+        $cookieRemover = $this->createRemover($name);
 
         return [
-            $cookieReemover->applyToRequest($request),
-            $cookieReemover->applyToResponse($response),
+            $cookieRemover->applyToRequest($request),
+            $cookieRemover->applyToResponse($response),
         ];
     }
 
@@ -198,6 +210,7 @@ class Cookies implements CookiesInterface
     }
 
     private bool $secure = true;
+    private bool $httpOnly = true;
 
     public function getSecure(): bool
     {
@@ -206,7 +219,31 @@ class Cookies implements CookiesInterface
 
     public function secure(bool $secure): CookiesInterface
     {
-        $this->secure = (bool) $secure;
+        $this->secure = $secure;
+
+        return $this;
+    }
+
+    public function getHttpOnly(): bool
+    {
+        return $this->httpOnly;
+    }
+
+    public function httpOnly(bool $httpOnly): CookiesInterface
+    {
+        $this->httpOnly = $httpOnly;
+
+        return $this;
+    }
+
+    public function getSameSite(): SameSite
+    {
+        return $this->sameSite;
+    }
+
+    public function sameSite(SameSite $sameSite): CookiesInterface
+    {
+        $this->sameSite = $sameSite;
 
         return $this;
     }

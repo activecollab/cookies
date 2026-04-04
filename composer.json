@@ -11,11 +11,19 @@
             "email": "ilija.studen@activecollab.com"
         }
     ],
+    "config" : {
+        "allow-plugins": {
+            "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.0.0"
+        }
+    },
     "require" : {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-openssl" : "*",
         "activecollab/utils" : "^2.0",
-        "dflydev/fig-cookies" : "^1.0",
+        "dflydev/fig-cookies" : "^3.0",
         "psr/http-server-middleware": "^1.0"
     },
     "require-dev" : {
