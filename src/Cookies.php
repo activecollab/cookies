@@ -40,24 +40,24 @@ class Cookies implements CookiesInterface
         }
     }
 
-    public function creteGetter(string $name): CookieGetterInterface
+    public function createGetter(string $name): CookieGetterInterface
     {
         return new CookieGetter($this->getPrefixedName($name));
     }
 
     public function exists(ServerRequestInterface $request, string $name): bool
     {
-        return $this->creteGetter($name)->exists($request);
+        return $this->createGetter($name)->exists($request);
     }
 
     public function get(
         ServerRequestInterface $request,
         string $name,
         $default = null,
-        bool $decrypt = true
-    )
+        bool $decrypt = true,
+    ): mixed
     {
-        $cookieReader = $this->creteGetter($name);
+        $cookieReader = $this->createGetter($name);
 
         if ($cookieReader->exists($request)) {
             $value = $cookieReader->get($request, $default);
@@ -75,7 +75,7 @@ class Cookies implements CookiesInterface
     public function createSetter(
         string $name,
         $value,
-        array $settings = []
+        array $settings = [],
     ): CookieSetterInterface
     {
         $encrypt = array_key_exists('encrypt', $settings) ? $settings['encrypt'] : true;
@@ -97,13 +97,13 @@ class Cookies implements CookiesInterface
         ResponseInterface $response,
         string $name,
         $value,
-        array $settings = []
+        array $settings = [],
     ): array
     {
         $cookieSetter = $this->createSetter(
             $name,
             $value,
-            $settings
+            $settings,
         );
 
         return [
