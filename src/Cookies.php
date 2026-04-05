@@ -134,8 +134,6 @@ private function prepareSettings(array $settings): array
         $settings['same_site'] = $this->getSameSite();
     }
 
-    $settings['expires'] = $this->currentTimestamp->getCurrentTimestamp() + $settings['ttl'];
-
     return $settings;
 }
 
