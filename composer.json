@@ -16,13 +16,13 @@
             "php-http/discovery": true
         },
         "platform": {
-            "php": "8.0.0"
+            "php": "8.2.0"
         }
     },
     "require" : {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "ext-openssl" : "*",
-        "activecollab/utils" : "^2.0",
+        "activecollab/utils" : "^3.0",
         "dflydev/fig-cookies" : "^3.0",
         "psr/http-server-middleware": "^1.0"
     },
